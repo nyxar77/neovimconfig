@@ -73,6 +73,18 @@ vim.keymap.set("n", "<leader>x", function()
     end
 end)
 
+
+-- in your keymaps or init.lua
+vim.api.nvim_create_user_command("Registers", function()
+    require("telescope.builtin").registers({
+        layout_strategy = "vertical",
+        layout_config = {
+            width = 0.8,
+            height = 0.7,
+        },
+    })
+end, {})
+
 -- Setup Telescope with the delete buffer function
 vim.keymap.set("n", "<leader>tb", function()
     local conf = require("telescope.config").values
@@ -82,7 +94,7 @@ vim.keymap.set("n", "<leader>tb", function()
 
         for _, buf in ipairs(buffers) do
             if buf.name ~= "" then
-                if vim.api.nvim_buf_get_option(buf.bufnr, "modified") then
+                if vim.bo[buf.bufnr].modified then
                     buf.name = buf.name .. "*"
                 end
                 print(buf.name)
@@ -164,4 +176,3 @@ end)
 --[[vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)]]
-

@@ -13,6 +13,6 @@ return {
         })
 
         vim.keymap.set("n", "-", oil.open)
-        vim.keymap.set("n", "+", oil.close)
+        vim.keymap.set("n", "=", oil.close)
     end
 }

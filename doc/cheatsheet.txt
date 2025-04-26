@@ -56,7 +56,11 @@ Plugin-Specific Keybindings:
 - comment.nvim:
   - `gc`: signle line comments
   - `gb`: multi-line comments
-
+- folds - nvim-ufo:
+  - `za`: fold/unfold under cursor
+  - `zA`: fold/unfold under cursor and all it's sub folders
+  - `zm`: fold everything in the current buffer
+  - `zr`: unfold everything in the current buffer
 
 Plugins ~
 -------------------------------------------------------------------------------
