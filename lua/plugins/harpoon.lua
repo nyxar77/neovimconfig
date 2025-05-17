@@ -3,11 +3,16 @@ return {
     branch = "harpoon2",
     dependencies = { "letieu/harpoon-lualine" },
     config = function()
+        if vim.g.keyboardLayout == "azerty" then
+            Indicators = { "e", "z", "a", "s" }
+        else
+            Indicators = { "e", "w", "q", "s" }
+        end
         local harpoon = require("harpoon")
         harpoon:setup({
             settings = {
                 save_on_toggle = false,
-                sync_on_ui_close = false,
+                sync_on_ui_close = true,
                 key = function()
                     return vim.loop.cwd()
                 end,
@@ -66,16 +71,16 @@ return {
             end
         end)
 
-        vim.keymap.set("n", "me", function()
+        vim.keymap.set("n", "m" .. Indicators[1], function()
             harpoon:list():select(1)
         end)
-        vim.keymap.set("n", "mz", function()
+        vim.keymap.set("n", "m" .. Indicators[2], function()
             harpoon:list():select(2)
         end)
-        vim.keymap.set("n", "ma", function()
+        vim.keymap.set("n", "m" .. Indicators[3], function()
             harpoon:list():select(3)
         end)
-        vim.keymap.set("n", "ms", function()
+        vim.keymap.set("n", "m" .. Indicators[4], function()
             harpoon:list():select(4)
         end)
         vim.keymap.set("n", "<C-S-P>", function()

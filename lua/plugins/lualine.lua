@@ -2,6 +2,13 @@ return {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     config = function()
+        if vim.g.keyboardLayout == "azerty" then
+            Indicators = { "e", "z", "a", "s" }
+            Active_indicators = { "E", "Z", "A", "S" }
+        else
+            Indicators = { "e", "w", "q", "s" }
+            Active_indicators = { "E", "W", "Q", "S" }
+        end
         require("lualine").setup({
             icons_enabled = true,
             options = {
@@ -19,14 +26,22 @@ return {
                     "%=", -- make the indicator center
                     {
                         "harpoon2",
-                        indicators = { "e", "z", "a", "s" },
-                        active_indicators = { "E", "Z", "A", "S" },
-                        color_active = { fg = "#FF00FF" },
+                        indicators = Indicators,
+                        active_indicators = Active_indicators,
+                        color_active = { fg = "#fc770a" },
                         _separator = " ",
                     },
                 },
                 lualine_x = {},
-                lualine_y = {},
+                lualine_y = {
+                    {
+                        function()
+                            return vim.g.keyboardLayout or "?"
+                        end,
+                        color = { fg = "#fc770a" },
+                        separator = " ",
+                    }
+                },
                 lualine_z = { "tabs" },
             },
             extensions = {},

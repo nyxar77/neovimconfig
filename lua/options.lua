@@ -1,3 +1,5 @@
+local changeLayout = require("changeLayout")
+
 local options = {
     -- Cursor shape "wide"
     -- guicursor = "",
@@ -40,6 +42,8 @@ local options = {
 }
 
 vim.g.mapleader = " "
+vim.g.keyboardLayout = changeLayout.loadlayout();
+
 for k, v in pairs(options) do
     vim.opt[k] = v
 end

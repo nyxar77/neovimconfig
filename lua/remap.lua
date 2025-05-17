@@ -1,3 +1,34 @@
+local changeLayout = require("changeLayout")
+
+-- setting the cheatsheet command
+vim.api.nvim_create_user_command('Cheatsheet', function()
+    vim.cmd('e ~/.config/nvim/doc/cheatsheet.md')
+    vim.schedule(function()
+        vim.bo.modifiable = false
+    end)
+end, {})
+
+-- set keyboard layout
+vim.api.nvim_create_user_command("SetLayout", function(opts)
+        local keyboardLayout = opts.args
+        if changeLayout.acceptedLayout(keyboardLayout) then
+            if changeLayout.savelayout(keyboardLayout) == true then
+                print("reload for changes to take affect!")
+            end
+        else
+            print("layout not supported!")
+        end
+    end,
+    {
+        nargs = 1,
+        complete = function()
+            local accepted_layouts = { "azerty", "qwerty" }
+            return accepted_layouts
+        end
+    }
+)
+
+
 -- create new tab
 vim.keymap.set("n", "<leader>mt", "<cmd>tabnew<CR>")
 vim.keymap.set("n", "<leader>tn", "<cmd>tabnext<CR>")
