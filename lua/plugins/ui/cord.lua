@@ -1,3 +1,4 @@
+-- CORD: discord activity plugin
 return {
     "vyfor/cord.nvim",
     build = ":Cord update",

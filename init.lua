@@ -16,6 +16,11 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("plugins", {
     root = vim.fn.stdpath("data") .. "/lazy",
+    spec = {
+        { import = "plugins" },
+        { import = "plugins.completions" },
+    },
+    -- defaults = { lazy = true },
     ui = {
         border = "rounded",
     },
@@ -28,6 +33,6 @@ require("lazy").setup("plugins", {
     },
     change_detection = {
         enabled = true,
-        notify = false
+        notify = true
     },
 })

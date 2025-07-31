@@ -28,9 +28,5 @@ return {
                 timeout_ms = 500,
             },
         })
-
-        vim.keymap.set({ "n", "v" }, "<leader>f", function()
-            require("conform").format({ lsp_fallback = true, async = true })
-        end, { desc = "format the buf" })
     end
 }

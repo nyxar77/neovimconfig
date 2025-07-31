@@ -12,7 +12,7 @@ return {
         require("lualine").setup({
             icons_enabled = true,
             options = {
-                theme = vim.g.hardhacker_lualine_theme,
+                theme = vim.g.lualine_theme,
             },
             disabled_filetypes = {
                 statusline = { "oil" },
@@ -20,7 +20,9 @@ return {
                 winbar = { "oil" },
             },
             tabline = {
-                lualine_a = {},
+                lualine_a = { function()
+                    return require "dap".session() "debugging" or ""
+                end },
                 lualine_b = { "filename" },
                 lualine_c = {
                     "%=", -- make the indicator center

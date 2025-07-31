@@ -28,7 +28,9 @@ vim.api.nvim_create_user_command("SetLayout", function(opts)
     }
 )
 
-
+vim.keymap.set("i", "<C-c>", "<Esc>")
+-- clear highlight after search
+vim.keymap.set('n', '<Esc>', ':nohlsearch<CR>', { silent = true })
 -- create new tab
 vim.keymap.set("n", "<leader>mt", "<cmd>tabnew<CR>")
 vim.keymap.set("n", "<leader>tn", "<cmd>tabnext<CR>")
@@ -44,27 +46,26 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz")
 -- jump backdward
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
--- move next tabline
+-- move to the next search & center it
 vim.keymap.set("n", "n", "nzzzv")
--- move previous tabline
+-- move to the previous search & center it
 vim.keymap.set("n", "N", "Nzzzv")
 
--- greatest remap ever
 -- paste in visual mode without overwriting the registery
-vim.keymap.set("x", "<leader>p", [["_dP]])
+vim.keymap.set("x", "P", [["_dP]])
 
 -- yank to system clipboard
-vim.keymap.set({ "n", "x" }, "y", '"+y')
+vim.keymap.set({ "n", "v" }, "Y", '"+y')
 
-vim.keymap.set({ "n", "v" }, "d", "d")     -- delete and save to clipboard
-vim.keymap.set({ "n", "v" }, "D", [["_d]]) -- delete and never save to clipboard
+-- delete and save to clipboard
+vim.keymap.set({ "n", "v" }, "D", '"+d"')
 
-vim.keymap.set("i", "<C-c>", "<Esc>")
 --open tmux
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 -- vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "format the buf" })
 
--- NOTE: unconfigured quick list
+--NOTE: unconfigured quick list:
+
 -- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 -- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 
@@ -79,7 +80,14 @@ end ]]
 
 
 -- substitute all words under cursor in the current buffer
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gIc<Left><Left><Left><Left>]],
+    { desc = "substitute under cursor" })
+
+-- format code
+vim.keymap.set({ "n" }, "<leader>ff", function()
+    require("conform").format({ lsp_fallback = true, async = true })
+end, { desc = "format the buf" })
+
 -- toggle file executable status
 vim.keymap.set("n", "<leader>x", function()
     local file = vim.fn.expand("%")
@@ -102,7 +110,7 @@ vim.keymap.set("n", "<leader>x", function()
     else
         print("oil filetype is not accepted.")
     end
-end)
+end, { silent = true, desc = "toggle executable mode" })
 
 
 -- in your keymaps or init.lua
@@ -128,7 +136,6 @@ vim.keymap.set("n", "<leader>tb", function()
                 if vim.bo[buf.bufnr].modified then
                     buf.name = buf.name .. "*"
                 end
-                print(buf.name)
 
                 table.insert(paths, buf)
             end

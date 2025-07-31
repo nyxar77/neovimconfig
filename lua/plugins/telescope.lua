@@ -16,7 +16,13 @@ return {
                     "--smart-case",
                     "--trim", -- add this value
                 },
-                file_ignore_patterns = { "node_modules/*", "build/*", ".git/*", "dist/*", ".exe", ".apk", ".tmp", ".swp" },
+                file_ignore_patterns = { "node_modules/*", "build/*", ".git/*", "dist/*", ".exe", ".apk", ".tmp", ".swp", ".png", ".jpg", ".jpeg" },
+                layout_config = {
+                    preview_width = 0.6,
+                    width = 0.8,
+                    height = 0.8,
+                    preview_cutoff = 120,
+                },
             },
         })
 
@@ -34,19 +40,25 @@ return {
 end, {}) ]]
 
         -- default global search
-        vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
+        vim.keymap.set("n", "<leader>ft", builtin.find_files, { desc = "find files" })
         -- git files in a dir
         vim.keymap.set("n", "<leader>fg", function()
             local Cdir = vim.fn.expand("%:p")
             Cdir = string.gsub(Cdir, "oil://", "")
             Cdir = string.gsub(Cdir, "[^/]+%.%w+$", "")
             builtin.git_files({ cwd = Cdir })
-        end, {})
+        end, { desc = "find git-tracked files in current dir" })
 
         -- look for content inside the files
+        -- vim.keymap.set("n", "<leader>fs", function()
+        --     builtin.live_grep({})
+        -- end, { desc = "grep in files" })
         vim.keymap.set("n", "<leader>fs", function()
-            builtin.live_grep({})
-        end)
+            local cwd = vim.fn.expand("%:p")
+            if cwd == "" then cwd = vim.fn.getcwd() end
+            cwd = cwd:gsub("oil://", "")
+            cwd = string.gsub(cwd, "[^/]+%.%w+$", "")
+            require("telescope.builtin").live_grep({ cwd = cwd })
+        end, { desc = "Live grep" })
     end
-
 }

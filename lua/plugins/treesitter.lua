@@ -1,8 +1,10 @@
 return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    branch = 'main',
+    lazy = false,
     config = function()
-        require("nvim-treesitter.configs").setup({
+        require "nvim-treesitter.configs".setup({
             ensure_installed = {
                 "zig",
                 "lua",
@@ -14,13 +16,11 @@ return {
                 "css",
                 "nix",
                 "desktop",
-                "toml",
                 "fish",
                 "bash",
                 "json",
                 "jsonc",
                 "dockerfile",
-                "yaml",
                 "xml",
                 "python",
                 "rust",
@@ -49,7 +49,7 @@ return {
             indent = {
                 enable = true,
             },
-            auto_install = true,
+            auto_install = false,
             highlight = {
                 enable = true,
                 additional_vim_regex_highlighting = true,
