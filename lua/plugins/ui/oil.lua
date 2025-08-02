@@ -1,6 +1,7 @@
 return {
     "stevearc/oil.nvim",
     opts = {},
+    lazy = false,
     config = function()
         local oil = require("oil")
 

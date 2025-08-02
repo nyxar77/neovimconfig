@@ -32,7 +32,7 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 -- clear highlight after search
 vim.keymap.set('n', '<Esc>', ':nohlsearch<CR>', { silent = true })
 -- create new tab
-vim.keymap.set("n", "<leader>mt", "<cmd>tabnew<CR>")
+vim.keymap.set("n", "<leader>tt", "<cmd>tabnew<CR>")
 vim.keymap.set("n", "<leader>tn", "<cmd>tabnext<CR>")
 vim.keymap.set("n", "<leader>tp", "<cmd>tabprev<CR>")
 -- move multiple selected line
@@ -198,7 +198,7 @@ vim.keymap.set("n", "<leader>tb", function()
             end,
         })
         :find()
-end)
+end, { desc = "Telescope Buffer" })
 
 --[[ vim.api.nvim_create_autocmd("BufWritePre", {
     callback = function()

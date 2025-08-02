@@ -20,7 +20,9 @@ require("lazy").setup("plugins", {
         { import = "plugins" },
         { import = "plugins.completions" },
     },
-    -- defaults = { lazy = true },
+    -- defaults = {
+    --     lazy = true,
+    -- },
     ui = {
         border = "rounded",
     },

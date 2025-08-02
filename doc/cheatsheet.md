@@ -40,7 +40,7 @@ This file contains an overview of my keybindings and plugin usage in Neovim.
 ### 🧬 LazyGit
 | Keybinding     | Description     |
 |----------------|-----------------|
-| `<leader>lg`   | Open LazyGit    |
+| `<leader>g`   | Open LazyGit    |
 
 ---
 

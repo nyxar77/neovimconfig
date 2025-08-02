@@ -3,8 +3,8 @@ return {
     dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
     config = function()
         require("mason-nvim-dap").setup({
-            ensure_installed = { "python", "bash", "php", "js", "delve", "codelldb" }, -- choose what you need
-            automatic_installation = false,
+            ensure_installed = { "python", "bash", "php", "js", "delve", "codelldb", "stylua" }, -- choose what you need
+            automatic_installation = true,
         })
     end,
 }

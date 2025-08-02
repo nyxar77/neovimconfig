@@ -2,6 +2,8 @@ return {
     {
         "hardhackerlabs/theme-vim",
         priority = 999,
+        event = "VeryLazy",
+        lazy = false,
         config = function()
             local themes = { "hardhacker", "catppuccin-macchiato", "dracula-soft", "gruvbox" }
             for _, theme in pairs(themes) do

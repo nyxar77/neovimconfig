@@ -1,5 +1,6 @@
 return {
     'kevinhwang91/nvim-ufo',
+    event = "BufReadPost",
     dependencies = { 'kevinhwang91/promise-async' },
     config = function()
         -- First setup ufo before setting keymaps
@@ -27,7 +28,5 @@ return {
                 },
             },
         })
-        vim.keymap.set('n', 'zr', require('ufo').openAllFolds)
-        vim.keymap.set('n', 'zm', require('ufo').closeAllFolds)
     end
 }

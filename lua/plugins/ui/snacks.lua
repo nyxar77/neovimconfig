@@ -1,7 +1,6 @@
 return {
     "folke/snacks.nvim",
-    priority = 1000,
-    lazy = false,
+    event = "VeryLazy",
     opts = {
         bigfile = { enabled = true },
         dashboard = { enabled = true },
@@ -16,4 +15,20 @@ return {
         statuscolumn = { enabled = true },
         words = { enabled = true },
     },
+    --[[ config = function()
+        require "snacks".setup {
+            header = {
+                "                                   ",
+                "          ▀████▀▄▄              ▄█ ",
+                "            █▀    ▀▀▄▄▄▄▄    ▄▄▀▀█ ",
+                "    ▄        █          ▀▀▀▀▄  ▄▀  ",
+                "   ▄▀ ▀▄      ▀▄              ▀▄▀  ",
+                "  ▄▀    █     █▀   ▄█▀▄      ▄█    ",
+                "  ▀▄     ▀▄  █     ▀██▀     ██▄█   ",
+                "   ▀▄    ▄▀ █   ▄██▄   ▄  ▄  ▀▀ █  ",
+                "    █  ▄▀  █    ▀██▀    ▀▀ ▀▀  ▄▀  ",
+                "   █   █  █      ▄▄           ▄▀   ",
+            },
+        }
+    end ]]
 }
