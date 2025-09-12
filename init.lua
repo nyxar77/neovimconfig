@@ -1,40 +1,6 @@
-require("options")
-require("remap")
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-    print("installing lazy.nvim")
-    vim.fn.system({
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable",
-        lazypath,
-    })
-end
-vim.opt.rtp:prepend(lazypath)
+require("config.options")
+require("config.remap")
+require("config.autocommand")
 
-require("lazy").setup("plugins", {
-    root = vim.fn.stdpath("data") .. "/lazy",
-    spec = {
-        { import = "plugins" },
-        { import = "plugins.completions" },
-    },
-    -- defaults = {
-    --     lazy = true,
-    -- },
-    ui = {
-        border = "rounded",
-    },
-    install = {
-        missing = true,
-    },
-    checker = {
-        enabled = true,
-        notify = false
-    },
-    change_detection = {
-        enabled = true,
-        notify = true
-    },
-})
+require("core.lazy")
+require("core.lsp")

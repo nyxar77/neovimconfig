@@ -1,5 +1,3 @@
-local changeLayout = require("changeLayout")
-
 local variant = io.popen("localectl status | grep -i 'X11 Variant'"):read("*l");
 
 if variant then
@@ -15,6 +13,7 @@ if variant then
     vim.api.nvim_set_var("keyboard_layout", selectedLayout or "azerty")
 end
 
+vim.g.mapleader = " "
 local options = {
     -- Cursor shape "wide"
     -- guicursor = "",
@@ -54,10 +53,10 @@ local options = {
     foldcolumn = '1',
     foldlevel = 99,
     foldlevelstart = 99,
-    foldenable = true
+    foldenable = true,
+    winborder = "rounded"
 }
 
-vim.g.mapleader = " "
 -- vim.g.keyboardLayout = changeLayout.loadlayout();
 vim.g.keyboardLayout = vim.g.keyboard_layout;
 vim.o.background = "dark";

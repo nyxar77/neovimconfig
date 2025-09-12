@@ -5,15 +5,21 @@ return {
         event = "VeryLazy",
         lazy = false,
         config = function()
-            local themes = { "hardhacker", "catppuccin-macchiato", "dracula-soft", "gruvbox" }
+            function setColorScheme(color)
+                return pcall(vim.cmd, "colorscheme " .. color)
+            end
+
+            local themes = { "hardhacker", "catppuccin-mocha", "dracula", "gruvbox" }
             for _, theme in pairs(themes) do
-                local statusOk, _ = pcall(vim.cmd, "colorscheme " .. theme)
+                local statusOk, _ = setColorScheme(theme)
                 if statusOk then
                     if theme == "hardhacker" then
                         vim.g.lualine_theme = vim.g.hardhacker_lualine_theme
-                    elseif theme == "catppuccin-macchiato" then
+                        vim.g.hardhacker_hide_tilde = 1
+                        vim.g.hardhacker_keyword_italic = 1
+                    elseif theme == "catppuccin-mocha" then
                         vim.g.lualine_theme = ""
-                    elseif theme == "dracula-soft" then
+                    elseif theme == "dracula" then
                         vim.g.lualine_theme = "dracula-nvim"
                     elseif theme == "gruvbox" then
                         vim.g.lualine_theme = "gruvbox"
@@ -46,10 +52,14 @@ return {
         "catppuccin/nvim",
         name = "catppuccin",
         config = function()
-            require "catppuccin".setup {
+            require("catppuccin").setup {
+                flavour = "mocha",
                 transparent_background = true,
+                background = {
+                    light = "latte",
+                    dark = "mocha",
+                },
             }
-        end
+        end,
     }
-
 }

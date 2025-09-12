@@ -1,7 +1,35 @@
 return {
     "williamboman/mason.nvim",
+    dependencies = { "VonHeikemen/lsp-zero.nvim", after = "mason-lspconfig.nvim" },
     config = function()
         local lspconfig = require "lspconfig";
+        local lsp_list = {
+            "clangd",
+            "cmake-language-server",
+            "luau_lsp",
+            "lua_ls",
+            "eslint",
+            "ts_ls",
+            "bashls",
+            "intelephense",
+            "cssls",
+            "cssmodules_ls",
+            "css_variables",
+            "tailwindcss",
+            "jsonls",
+            "docker_compose_language_service",
+            "dockerls",
+            "emmet_language_server",
+            "html",
+            "graphql",
+            "solidity",
+            "hyprls",
+            "yamlls",
+            "helm_ls",
+            "taplo",
+            "gopls",
+
+        }
         local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
         require("mason").setup({
             install_root_dir = vim.fn.stdpath("data") .. "/mason",
@@ -27,45 +55,6 @@ return {
                 upgrade_pip = false,
             },
         })
-        local lsp_list = {
-            "luau_lsp",
-            "lua_ls",
-            "eslint",
-            "ts_ls",
-            "bashls",
-            "intelephense",
-            "cssls",
-            "cssmodules_ls",
-            "css_variables",
-            "tailwindcss",
-            "jsonls",
-            "docker_compose_language_service",
-            "dockerls",
-            "emmet_language_server",
-            "html",
-            "graphql",
-            "solidity",
-            "hyprls",
-            "yamlls",
-            "helm_ls",
-            "taplo",
-            "gopls"
-        }
-
-        local ignore_list = {
-            lua_ls = true,
-            yamlls = true,
-            taplo = true,
-            nixd = true,
-        }
-
-        for _, server in ipairs(lsp_list) do
-            if not ignore_list[server] then
-                lspconfig[server].setup({
-                    capabilities = capabilities
-                })
-            end
-        end
     end
 
 }

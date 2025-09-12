@@ -3,12 +3,14 @@ return {
     event = "LspAttach",
     lazy = false,
     config = function()
-        local builtin = require "telescope.builtin";
+        -- local builtin = require "telescope.builtin";
         local lspconfig = require "lspconfig";
         local lsp = require "lsp-zero"
-        local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
+        -- local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
 
         local ensure_installed = {
+            "clangd",
+            "cmake",
             "luau_lsp",
             "lua_ls",
             "eslint",
@@ -30,80 +32,84 @@ return {
             "yamlls",
             "helm_ls",
             "taplo",
-            "gopls"
+            "gopls",
         }
         require("mason-lspconfig").setup({
             ensure_installed = ensure_installed,
             automatic_installation = false,
         })
         function Custom_lspconfigs()
-            lspconfig.nixd.setup({
+            --[[ lspconfig.nixd.setup({
+                command = "nixd",
+                capabilities = capabilities,
+                filetypes = "nix",
                 settings = {
                     nixd = {
                         nixpkgs = {
                             expr = "import <nixpkgs> { }",
                         },
                         formatting = {
-                            command = { "nixfmt" },
+                            command = { "alejandra" },
                         },
-                        --[[ options = {
-            nixos = {
-            expr = '(builtins.getFlake "/PATH/TO/FLAKE").nixosConfigurations.CONFIGNAME.options',
-            },
-            home_manager = {
-            expr = '(builtins.getFlake "/PATH/TO/FLAKE").homeConfigurations.CONFIGNAME.options',
-            },
-            }, ]]
+                        options = {
+                            nixos = {
+                                expr = '(builtins.getFlake "/etc/nixos").nixosConfigurations.nixos.options',
+                            },
+                            home_manager = {
+                                expr =
+                                '(builtins.getFlake "/home/nyxar/.config/home-manager").homeConfigurations.nyxar.options',
+                            },
+                        },
                     },
                 },
-            })
-
-            lspconfig.taplo.setup({
-                capabilities = capabilities,
-                settings = {
-                    toml = {
-                        schemas = {
-                            ["https://starship.rs/config-schema.json"] = "starship.toml",
-                        },
-                        completion = true,
-                        hover = true,
-                    },
-                },
-            })
-
-            lspconfig.yamlls.setup({
-                capabilities = capabilities,
-                settings = {
-                    filetypes = { "yaml", "yml" },
-                    yaml = {
-                        schemas = {
-                            -- kubernetes = "*.k8s.{yml,yaml}",
-                            ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.31.3/all.json"] =
-                            "*.k8s.{yml,yaml}",
-                            ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
-                            ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
-                            ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
-                            ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
-                            ["http://json.schemastore.org/kstomization"] = "kustomization.{yml,yaml}",
-                            ["http://json.schemastore.org/ansible-playbook"] = "*play*.{yml,yaml}",
-                            ["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
-                            ["https://json.schemastore.org/dependabot-v2"] = ".github/dependabot.{yml,yaml}",
-                            ["https://json.schemastore.org/gitlab-ci"] = "*gitlab-ci*.{yml,yaml}",
-                            ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] =
-                            "*api*.{yml,yaml}",
-                            ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] =
-                            "*docker-compose*.{yml,yaml}",
-                            ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] =
-                            "*flow*.{yml,yaml}",
-                            -- ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.31.3-standalone-strict/all.json"] = "*.k8s.{yml,yaml}",
-                        },
-                        completion = true,
-                        hover = true,
-                    },
-                },
-            })
-
-            lspconfig.lua_ls.setup {
+            }) ]]
+            --
+            -- lspconfig.taplo.setup({
+            --     capabilities = capabilities,
+            --     settings = {
+            --         toml = {
+            --             schemas = {
+            --                 ["https://starship.rs/config-schema.json"] = "starship.toml",
+            --             },
+            --             completion = true,
+            --             hover = true,
+            --         },
+            --     },
+            -- })
+            --
+            -- lspconfig.yamlls.setup({
+            --     capabilities = capabilities,
+            --     settings = {
+            --         filetypes = { "yaml", "yml" },
+            --         yaml = {
+            --             schemas = {
+            --                 -- kubernetes = "*.k8s.{yml,yaml}",
+            --                 ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.31.3/all.json"] =
+            --                 "*.k8s.{yml,yaml}",
+            --                 ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
+            --                 ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+            --                 ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
+            --                 ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
+            --                 ["http://json.schemastore.org/kstomization"] = "kustomization.{yml,yaml}",
+            --                 ["http://json.schemastore.org/ansible-playbook"] = "*play*.{yml,yaml}",
+            --                 ["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
+            --                 ["https://json.schemastore.org/dependabot-v2"] = ".github/dependabot.{yml,yaml}",
+            --                 ["https://json.schemastore.org/gitlab-ci"] = "*gitlab-ci*.{yml,yaml}",
+            --                 ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] =
+            --                 "*api*.{yml,yaml}",
+            --                 ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] =
+            --                 "*docker-compose*.{yml,yaml}",
+            --                 ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] =
+            --                 "*flow*.{yml,yaml}",
+            --                 -- ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.31.3-standalone-strict/all.json"] = "*.k8s.{yml,yaml}",
+            --             },
+            --             completion = true,
+            --             hover = true,
+            --         },
+            --     },
+            -- })
+            --
+            --[[ lspconfig.lua_ls.setup {
                 settings = {
                     Lua = {
                         runtime = { version = 'LuaJIT' },
@@ -112,7 +118,7 @@ return {
                         telemetry = { enable = false }
                     }
                 }
-            }
+            } ]]
 
             vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
                 pattern = { "*.hl", "hypr*.conf" },
@@ -132,28 +138,28 @@ return {
         Custom_lspconfigs()
 
         lsp.on_attach(function(_, bufnr)
-            vim.keymap.set("n", "<leader>e", function()
+            --[[ vim.keymap.set("n", "<leader>e", function()
                 builtin.diagnostics({ bufnr = 5 }) -- Shows diagnostics in Telescope for the current buffer
             end, { buffer = bufnr, remap = false, desc = "diagnostics in Telescope in current buffer" })
-
             vim.keymap.set("n", ")d", function()
                 vim.diagnostic.goto_next()
             end, { buffer = bufnr, remap = false, desc = "next diagnostic" })
 
             vim.keymap.set("n", "(d", function()
                 vim.diagnostic.goto_prev()
-            end, { buffer = bufnr, remap = false, desc = "previous diagnostic" })
-
+            end, { buffer = bufnr, remap = false, desc = "previous diagnostic" }) ]]
+            --[[
             vim.keymap.set("n", "gd", function()
                 builtin.lsp_definitions()
             end, { buffer = bufnr, remap = false, desc = "go to definition" })
 
             vim.keymap.set("n", "K", function()
-                vim.lsp.buf.hover()
+                vim.lsp.buf.hover({ border = "rounded" })
             end, { buffer = bufnr, remap = false, desc = "" })
 
             vim.keymap.set("n", "<leader>vws", function()
-                builtin.lsp_workspace_symbols()
+                -- builtin.lsp_workspace_symbols()
+                vim.lsp.buf.workspace_symbol()
             end, { buffer = bufnr, remap = false, desc = "workspace symbols" })
 
             vim.keymap.set("n", "gO", function()
@@ -162,6 +168,7 @@ return {
 
             vim.keymap.set("n", "gr", function()
                 builtin.lsp_references()
+                -- vim.lsp.buf.workspace_symbol()
             end, { buffer = bufnr, remap = false, desc = "LSP references" })
 
             vim.keymap.set("n", "<leader>vca", function()
@@ -178,8 +185,8 @@ return {
 
             vim.keymap.set("n", "<leader>vtd", function()
                 builtin.lsp_type_definitions()
-            end, { buffer = bufnr, remap = false, desc = "LSP type definitions" })
+            end, { buffer = bufnr, remap = false, desc = "LSP type definitions" }) ]]
         end)
-        lsp.setup()
+        -- lsp.setup()
     end
 }

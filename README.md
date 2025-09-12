@@ -1,5 +1,6 @@
 # My Neovim Configuration
 
+
 ## Overview
 [Brief description of your Neovim setup, philosophy, and key features]
 

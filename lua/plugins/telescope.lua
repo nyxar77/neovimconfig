@@ -48,6 +48,8 @@ return {
             local Cdir = vim.fn.expand("%:p")
             Cdir = string.gsub(Cdir, "oil://", "")
             Cdir = string.gsub(Cdir, "[^/]+%.%w+$", "")
+            -- print(vim.fs.root(0, ".git"))
+            -- local Cdir = vim.fs.root(0, ".git")
             builtin.git_files({ cwd = Cdir })
         end, { desc = "find git-tracked files in current dir" })
 

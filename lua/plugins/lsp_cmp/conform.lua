@@ -19,7 +19,7 @@ return {
                 php = { "prettier" },
                 graphql = { "prettier" },
                 markdown = { "prettier" },
-                nix = { "nixpkgs-fmt" },
+                nix = { "alejandra" },
                 hypr = { "hyprls" },
             },
             format_on_save = {

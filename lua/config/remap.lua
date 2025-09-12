@@ -1,40 +1,10 @@
-local changeLayout = require("changeLayout")
-
--- setting the cheatsheet command
-vim.api.nvim_create_user_command('Cheatsheet', function()
-    vim.cmd('e ~/.config/nvim/doc/cheatsheet.md')
-    vim.schedule(function()
-        vim.bo.modifiable = false
-    end)
-end, {})
-
--- set keyboard layout
-vim.api.nvim_create_user_command("SetLayout", function(opts)
-        local keyboardLayout = opts.args
-        if changeLayout.acceptedLayout(keyboardLayout) then
-            if changeLayout.savelayout(keyboardLayout) == true then
-                print("reload for changes to take affect!")
-            end
-        else
-            print("layout not supported!")
-        end
-    end,
-    {
-        nargs = 1,
-        complete = function()
-            local accepted_layouts = { "azerty", "qwerty" }
-            return accepted_layouts
-        end
-    }
-)
-
 vim.keymap.set("i", "<C-c>", "<Esc>")
 -- clear highlight after search
 vim.keymap.set('n', '<Esc>', ':nohlsearch<CR>', { silent = true })
 -- create new tab
-vim.keymap.set("n", "<leader>tt", "<cmd>tabnew<CR>")
-vim.keymap.set("n", "<leader>tn", "<cmd>tabnext<CR>")
-vim.keymap.set("n", "<leader>tp", "<cmd>tabprev<CR>")
+vim.keymap.set("n", "<leader>tt", "<cmd>tabnew<CR>", { desc = "new tab" })
+vim.keymap.set("n", "<leader>tn", "<cmd>tabnext<CR>", { desc = "next tab" })
+vim.keymap.set("n", "<leader>tp", "<cmd>tabprev<CR>", { desc = "previous tab" })
 -- move multiple selected line
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -51,20 +21,19 @@ vim.keymap.set("n", "n", "nzzzv")
 -- move to the previous search & center it
 vim.keymap.set("n", "N", "Nzzzv")
 
+--NOTE: unconfigured quick list:
 -- paste in visual mode without overwriting the registery
-vim.keymap.set("x", "P", [["_dP]])
+vim.keymap.set("x", "P", [["_dP]], { desc = "paste in x mode without overwriting the registery" })
 
 -- yank to system clipboard
-vim.keymap.set({ "n", "v" }, "Y", '"+y')
+vim.keymap.set({ "n", "v" }, "Y", '"+y', { desc = "yank to system" })
 
--- delete and save to clipboard
-vim.keymap.set({ "n", "v" }, "D", '"+d"')
+vim.keymap.set({ "n", "v" }, "D", '"dd', { desc = "del & save to nvim D registery" })
 
 --open tmux
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 -- vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "format the buf" })
 
---NOTE: unconfigured quick list:
 
 -- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 -- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
@@ -87,7 +56,6 @@ vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gIc<Left><Left>
 vim.keymap.set({ "n" }, "<leader>ff", function()
     require("conform").format({ lsp_fallback = true, async = true })
 end, { desc = "format the buf" })
-
 -- toggle file executable status
 vim.keymap.set("n", "<leader>x", function()
     local file = vim.fn.expand("%")
@@ -112,17 +80,6 @@ vim.keymap.set("n", "<leader>x", function()
     end
 end, { silent = true, desc = "toggle executable mode" })
 
-
--- in your keymaps or init.lua
-vim.api.nvim_create_user_command("Registers", function()
-    require("telescope.builtin").registers({
-        layout_strategy = "vertical",
-        layout_config = {
-            width = 0.8,
-            height = 0.7,
-        },
-    })
-end, {})
 
 -- Setup Telescope with the delete buffer function
 vim.keymap.set("n", "<leader>tb", function()
@@ -173,7 +130,7 @@ vim.keymap.set("n", "<leader>tb", function()
                         local state = require("telescope.actions.state")
                         local current_picker = state.get_current_picker(prompt_buffer_number)
                         -- Close the picker
-                        require("telescope.actions").close()
+                        require("telescope.actions").close(prompt_buffer_number)
                         current_picker:refresh(make_finder())
                     end,
                 },
@@ -185,7 +142,7 @@ vim.keymap.set("n", "<leader>tb", function()
                     local current_picker = state.get_current_picker(prompt_buffer_number)
                     if selection then
                         local buf = selection.bufnr
-                        local is_modified = vim.api.nvim_buf_get_option(buf, "modified")
+                        local is_modified = vim.bo[buf].modified
                         if is_modified then
                             print("Buffer is modified! Cannot delete without saving.")
                             return
@@ -199,18 +156,3 @@ vim.keymap.set("n", "<leader>tb", function()
         })
         :find()
 end, { desc = "Telescope Buffer" })
-
---[[ vim.api.nvim_create_autocmd("BufWritePre", {
-    callback = function()
-        local mode = vim.api.nvim_get_mode().mode
-        local filetype = vim.bo.filetype
-        if vim.bo.modified == true and mode == 'n' and filetype ~= "oil" then
-            vim.cmd('lua vim.lsp.buf.format()')
-        else
-        end
-    end
-}) ]]
-
---[[vim.keymap.set("n", "<leader><leader>", function()
-    vim.cmd("so")
-end)]]
