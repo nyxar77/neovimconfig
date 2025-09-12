@@ -1,5 +1,5 @@
 {pkgs}:
-pkgs.mkShellNoCC {
+pkgs.mkCustomShellNoCC {
   buildInputs = with pkgs; [
     lua-language-server
     stylua

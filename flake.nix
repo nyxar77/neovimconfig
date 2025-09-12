@@ -15,7 +15,20 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) ["intelephense"];
+        overlays = [
+          (final: prev: {
+            # mkCustomShellNoCC = prev.mkShellNoCC.override (oldAttrs: {
+            #   packages = oldAttrs.packages ++ [pkgs.tree-sitter];
+            # });
+            mkCustomShellNoCC = args:
+              prev.mkShellNoCC (args
+                // {
+                  packages = args.packages ++ [pkgs.tree-sitter];
+                });
+          })
+        ];
       };
+
       mkImportShell = key: path: pkgs.lib.nameValuePair key (import ./shells/${path} {inherit pkgs;});
     in {
       devShells = builtins.listToAttrs [

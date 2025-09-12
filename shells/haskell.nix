@@ -1,5 +1,5 @@
 {pkgs}:
-pkgs.mkShellNoCC {
+pkgs.mkCustomShellNoCC {
   packages = with pkgs; [
     haskell
     haskell-language-server

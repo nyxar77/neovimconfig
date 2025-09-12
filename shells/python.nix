@@ -1,8 +1,8 @@
 {pkgs}:
 pkgs.mkCustomShellNoCC {
   packages = with pkgs; [
-    go
-    gopls
-    delve
+    python312
+    isort
+    black
   ];
 }
