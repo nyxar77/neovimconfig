@@ -42,19 +42,7 @@
         (mkImportShell "yaml" "yaml.nix")
         (mkImportShell "make" "make.nix")
       ];
-      /*
-       {
-        clang = import ./shells/clang.nix {inherit pkgs;};
-        nix = import ./shells/nix-lang.nix {inherit pkgs;};
-        lua = import ./shells/lua.nix {inherit pkgs;};
-        go = import ./shells/golang.nix {inherit pkgs;};
-        haskell = import ./shells/haskell.nix {inherit pkgs;};
-        js = import ./shells/javascript.nix {inherit pkgs;};
-        php = import ./shells/php.nix {inherit pkgs;};
-        yaml = import ./shells/yaml.nix {inherit pkgs;};
-        make = import ./shells/make.nix {inherit pkgs;};
-      };
-      */
+
       /*
          buildInputs = with pkgs; [
         # Core tooling

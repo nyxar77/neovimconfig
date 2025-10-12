@@ -4,7 +4,6 @@ pkgs.mkCustomShellNoCC {
     typescript-language-server
     nodejs
     eslint
-    vscode-langservers-extracted
     vscode-js-debug
   ];
 }
