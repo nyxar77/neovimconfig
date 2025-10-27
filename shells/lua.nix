@@ -1,9 +1,20 @@
-{pkgs}:
+{
+  pkgs,
+  unstablePkgs,
+}:
 pkgs.mkCustomShellNoCC {
-  buildInputs = with pkgs; [
-    lua-language-server
-    stylua
-    luajit
-    lua5_1
-  ];
+  packages = with pkgs;
+    [
+      # lua-language-server
+      stylua
+      luajit
+    ]
+    ++ [
+      unstablePkgs.emmylua-ls
+      unstablePkgs.emmylua-check
+      unstablePkgs.emmylua-doc-cli
+    ];
+  shellHook = ''
+    export PATH=$PATH:${pkgs.luajit}/bin
+  '';
 }

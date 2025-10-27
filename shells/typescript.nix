@@ -1,7 +1,7 @@
 {pkgs, ...}:
 pkgs.mkCustomShellNoCC {
   packages = with pkgs; [
-    nixd
-    alejandra
+    typescript
+    typescript-language-server
   ];
 }

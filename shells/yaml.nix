@@ -1,4 +1,4 @@
-{pkgs}:
+{pkgs,...}:
 pkgs.mkCustomShellNoCC {
   packages = with pkgs; [
     yaml-language-server

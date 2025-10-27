@@ -1,8 +1,8 @@
-{pkgs,...}:
+{pkgs, ...}:
 pkgs.mkCustomShellNoCC {
   packages = with pkgs; [
-    go
-    gopls
-    delve
+    asm-lsp
+    nasm
+    binutils
   ];
 }

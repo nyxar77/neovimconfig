@@ -1,9 +1,10 @@
-{pkgs}:
+{pkgs,...}:
 pkgs.mkCustomShellNoCC {
   packages = with pkgs; [
     clang-tools
+    # lldb
     gcc
-    lldb
+    gdb
     cmake
     cmake-lint
   ];
