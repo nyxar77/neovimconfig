@@ -34,6 +34,7 @@ vim.lsp.enable({
 	"hyprls",
 	"helm_ls",
 	"asm-lsp",
+	"sqls",
 })
 
 vim.diagnostic.config({
@@ -161,7 +162,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
 		for _, client in ipairs(clients) do
-			if client.name ~= "asm-lsp" then
+			if client.name ~= "asm-lsp" and client.name ~= "sqls" then
 				setup_highlight(args.buf)
 			end
 		end

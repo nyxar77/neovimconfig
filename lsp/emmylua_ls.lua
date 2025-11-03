@@ -16,7 +16,7 @@ return {
 		"selene.yml",
 		"stylua.toml",
 	},
-	--[[ settings = function()
+	settings = (function()
 		if is_in_nvimconfig() then
 			return {
 				Lua = {
@@ -26,5 +26,5 @@ return {
 			}
 		end
 		return {}
-	end, ]]
+	end)(),
 }

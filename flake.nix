@@ -64,6 +64,7 @@
         (mkImportShell "yaml" "yaml.nix")
         (mkImportShell "make" "make.nix")
         (mkImportShell "asm" "assembly.nix")
+        (mkImportShell "sql" "sql.nix")
       ];
     });
 }
