@@ -2,7 +2,7 @@
   description = "multi-language devShells";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -43,7 +43,7 @@
       };
 
       mkImportShell = key: path:
-        pkgs.lib.nameValuePair key (import ./shells/${path} {
+        pkgs.lib.nameValuePair key (pkgs.callPackage ./shells/${path} {
           inherit
             pkgs
             unstablePkgs
@@ -59,12 +59,14 @@
         (mkImportShell "php" "php.nix")
         (mkImportShell "web" "web.nix")
         (mkImportShell "js" "javascript.nix")
+        (mkImportShell "json" "json.nix")
         (mkImportShell "ts" "typescript.nix")
         # (mkImportShell "jsweb" "jsweb.nix")
         (mkImportShell "yaml" "yaml.nix")
         (mkImportShell "make" "make.nix")
         (mkImportShell "asm" "assembly.nix")
         (mkImportShell "sql" "sql.nix")
+        (mkImportShell "bash" "bash.nix")
       ];
     });
 }

@@ -162,9 +162,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
 		for _, client in ipairs(clients) do
-			if client.name ~= "asm-lsp" and client.name ~= "sqls" then
+			if
+
+				client.capabilities.textDocument ~= nil
+				and client.capabilities.textDocument.documentHighlight ~= nil
+				and client.capabilities.textDocument.documentHighlight.dynamicRegistration == true
+			then
 				setup_highlight(args.buf)
 			end
+			--[[ if client.name ~= "asm-lsp" and client.name ~= "sqls" then
+				setup_highlight(args.buf)
+			end ]]
 		end
 	end,
 })
