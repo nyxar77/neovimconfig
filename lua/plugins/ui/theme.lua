@@ -5,12 +5,9 @@ return {
 		event = "VeryLazy",
 		lazy = false,
 		config = function()
-			-- Define a theme table
-			local fallbackTheme = "catppuccin"
-			local preferredTheme = "hardhacker-darker"
+			local fallbackTheme = "hardhacker-darker"
+			local preferredTheme = "catppuccin"
 
-			--[[ local fallbackTheme = "hardhacker-darker"
-			local preferredTheme = "catppuccin" ]]
 			local themes = {
 				["hardhacker-darker"] = {
 					lualine_theme = vim.g.hardhacker_lualine_theme,
@@ -28,7 +25,6 @@ return {
 				},
 			}
 
-			-- Function to set colorscheme
 			local function setTheme(theme)
 				local ok, _ = pcall(vim.cmd, "colorscheme " .. theme)
 				if ok then
@@ -42,7 +38,6 @@ return {
 				return ok
 			end
 
-			-- Example usage: pick the first theme that works
 			if not setTheme(preferredTheme) then
 				setTheme(fallbackTheme)
 			end
@@ -78,6 +73,7 @@ return {
 		config = function()
 			require("gruvbox").setup({
 				transparent_mode = true,
+				flavour = "mocha",
 				overrides = {
 					Pmenu = { link = "Normal" },
 				},
@@ -104,57 +100,153 @@ return {
 					information = { "undercurl" },
 				},
 			},
-			integrations = {
-				aerial = true,
-				alpha = true,
-				cmp = true,
-				dashboard = true,
-				flash = true,
-				fzf = true,
-				grug_far = true,
-				gitsigns = true,
-				headlines = true,
-				illuminate = true,
-				indent_blankline = { enabled = true },
-				leap = true,
-				lsp_trouble = true,
-				mason = true,
-				mini = true,
-				navic = { enabled = true, custom_bg = "lualine" },
-				neotest = true,
-				neotree = true,
-				noice = true,
-				notify = true,
-				snacks = true,
-				telescope = true,
-				treesitter_context = true,
-				which_key = true,
-			},
 		},
 		config = function()
+			-- require("catppuccin").setup({
+			-- 	flavour = "mocha",
+			-- 	compile_path = vim.fn.stdpath("cache") .. "/catppuccin",
+			-- 	transparent_background = true,
+			-- 	term_colors = true,
+			-- 	styles = {
+			-- 		comments = { "italic" },
+			-- 		functions = { "bold" },
+			-- 		keywords = { "italic" },
+			-- 		operators = { "bold" },
+			-- 		conditionals = { "bold" },
+			-- 		loops = { "bold" },
+			-- 		booleans = { "bold", "italic" },
+			-- 		numbers = {},
+			-- 		types = {},
+			-- 		strings = {},
+			-- 		variables = {},
+			-- 		properties = {},
+			-- 	},
+			-- })
+
+			-- Define the Hardhacker Palette explicitly for reuse
+			local hardhacker = {
+				fg = "#e4dee9",
+				selection = "#3f3951",
+				comment = "#938aad", -- Muted purple-grey for comments
+
+				-- The Neon Accents
+				red = "#e965a5", -- Functions / Errors
+				green = "#b1f2a7", -- Strings
+				yellow = "#ebde76", -- Parameters / Warnings
+				blue = "#b1baf4", -- Keywords
+				purple = "#e192ef", -- Constants / Builtins
+				pink = "#ff85c0",
+				cyan = "#b3f4f3", -- Types / Classes
+				orange = "#fab387", -- *NEW* Numbers / Booleans (Breaks up the red)
+				teal = "#94e2d5", -- *NEW* Operators / Delimiters
+
+				border = "#575268", -- Muted border (so it doesn't scream at you)
+			}
 			require("catppuccin").setup({
 				flavour = "mocha",
-				transparent_background = true,
+				background = { light = "latte", dark = "mocha" },
+				transparent_background = true, -- Keep false for that deep void background
+				show_end_of_buffer = false, -- Hide the tildes (~) at end of buffer
+				term_colors = true,
+				auto_integrations = true,
 				dim_inactive = {
-					enabled = true,
+					enabled = false,
+					shade = "dark",
+					percentage = 0.01,
 				},
-				background = {
-					light = "latte",
-					dark = "mocha",
-				},
+				no_italic = false,
+				no_bold = false,
+				no_underline = false,
 				float = {
 					transparent = true,
 					solid = true,
 				},
-				auto_integrations = true,
+				styles = {
+					comments = { "italic" },
+					conditionals = { "italic" },
+					loops = {},
+					functions = { "bold" },
+					keywords = { "italic" },
+					strings = {},
+					variables = {},
+					numbers = {},
+					booleans = { "bold" },
+					properties = {},
+					types = { "bold" },
+					operators = {},
+				},
+
+				color_overrides = {
+					mocha = {
+						text = hardhacker.fg,
+						subtext1 = hardhacker.comment,
+						subtext0 = "#7a6f8f",
+
+						surface2 = hardhacker.selection,
+						surface1 = "#2b263b",
+						surface0 = "#1b182c",
+
+						-- Redistributing colors to avoid "Red Overload"
+						red = hardhacker.pin,
+						green = hardhacker.green,
+						yellow = hardhacker.yellow,
+						blue = hardhacker.blue,
+						magenta = hardhacker.purple,
+						pink = hardhacker.pink,
+						teal = hardhacker.teal,
+						sky = hardhacker.cyan,
+						lavender = hardhacker.blue,
+						peach = hardhacker.yellow, -- Peach mapped to Orange
+						maroon = hardhacker.red,
+						rosewater = hardhacker.yellow,
+						flamingo = hardhacker.red,
+					},
+				},
 				integrations = {
 					cmp = true,
+					dap = true,
+					dap_ui = true,
+					diffview = true,
+					dropbar = { enabled = true, color_mode = true },
+					fidget = true,
+					flash = true,
+					fzf = true,
 					gitsigns = true,
-					nvimtree = true,
-					notify = false,
-					mini = {
+					grug_far = true,
+					hop = true,
+					indent_blankline = { enabled = true, colored_indent_levels = true },
+					lsp_saga = true,
+					lsp_trouble = true,
+					markdown = true,
+					mason = true,
+					mini = { enabled = true },
+					native_lsp = {
 						enabled = true,
-						indentscope_color = "",
+						virtual_text = {
+							errors = { "italic" },
+							hints = { "italic" },
+							warnings = { "italic" },
+							information = { "italic" },
+						},
+						underlines = {
+							errors = { "underline" },
+							hints = { "underline" },
+							warnings = { "underline" },
+							information = { "underline" },
+						},
+					},
+					notify = true,
+					nvimtree = true,
+					rainbow_delimiters = true,
+					render_markdown = true,
+					semantic_tokens = true,
+					telescope = { enabled = true, style = "nvchad" },
+					treesitter = true,
+					treesitter_context = true,
+					which_key = true,
+					snacks = {
+						enabled = true,
+						indent_scope_color = "magenta",
 					},
 				},
 			})

@@ -1,6 +1,7 @@
 {
   pkgs,
   unstablePkgs,
+  ...
 }:
 pkgs.mkCustomShellNoCC {
   packages = with pkgs;

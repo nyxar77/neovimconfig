@@ -2,6 +2,7 @@
   description = "multi-language devShells";
 
   inputs = {
+    nixpkgs25-05.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
@@ -12,9 +13,11 @@
     nixpkgs,
     nixpkgs-unstable,
     flake-utils,
-  }:
+    ...
+  } @ inputs:
     flake-utils.lib.eachDefaultSystem (system: let
       unstablePkgs = import nixpkgs-unstable {inherit system;};
+      pkgs25 = import inputs.nixpkgs25-05 {inherit system;};
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) ["intelephense"];
@@ -47,11 +50,14 @@
           inherit
             pkgs
             unstablePkgs
+            pkgs25
             ;
         });
     in {
+      packages.prettier = pkgs.prettier;
       devShells = builtins.listToAttrs [
         (mkImportShell "clang" "clang.nix")
+        (mkImportShell "py" "python.nix")
         (mkImportShell "nix" "nix-lang.nix")
         (mkImportShell "lua" "lua.nix")
         (mkImportShell "go" "golang.nix")
@@ -67,6 +73,7 @@
         (mkImportShell "asm" "assembly.nix")
         (mkImportShell "sql" "sql.nix")
         (mkImportShell "bash" "bash.nix")
+        (mkImportShell "docker" "docker.nix")
       ];
     });
 }

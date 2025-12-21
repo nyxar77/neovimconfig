@@ -16,6 +16,9 @@ return {
 		"selene.yml",
 		"stylua.toml",
 	},
+	workspace = {
+		ignore_dir = { ".direnv", ".git" },
+	},
 	settings = (function()
 		if is_in_nvimconfig() then
 			return {

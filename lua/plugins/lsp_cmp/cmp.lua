@@ -15,9 +15,6 @@ return {
 				build = "make install_jsregexp",
 				version = "v2.*",
 				event = "InsertEnter",
-				config = function()
-					--require("luasnip.loaders.from_vscode").lazy_load()
-				end,
 			},
 			{ "saadparwaiz1/cmp_luasnip", after = "LuaSnip", lazy = true }, -- combine luaSnip with nvim-cmp
 			{ "rafamadriz/friendly-snippets", lazy = true }, -- pre made snippets

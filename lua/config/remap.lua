@@ -1,6 +1,6 @@
 vim.keymap.set("i", "<C-c>", "<Esc>")
 -- clear highlight after search
-vim.keymap.set('n', '<Esc>', ':nohlsearch<CR>', { silent = true })
+vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
 -- create new tab
 vim.keymap.set("n", "<leader>tt", "<cmd>tabnew<CR>", { desc = "new tab" })
 vim.keymap.set("n", "<leader>tn", "<cmd>tabnext<CR>", { desc = "next tab" })
@@ -34,7 +34,6 @@ vim.keymap.set({ "n", "v" }, "D", '"dd', { desc = "del & save to nvim D register
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 -- vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "format the buf" })
 
-
 -- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 -- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 
@@ -47,112 +46,115 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
     return false
 end ]]
 
-
 -- substitute all words under cursor in the current buffer
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gIc<Left><Left><Left><Left>]],
-    { desc = "substitute under cursor" })
+vim.keymap.set(
+	"n",
+	"<leader>s",
+	[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gIc<Left><Left><Left><Left>]],
+	{ desc = "substitute under cursor" }
+)
 
 -- format code
 vim.keymap.set({ "n" }, "<leader>ff", function()
-    require("conform").format({ lsp_fallback = true, async = true })
+	require("conform").format({ lsp_fallback = true, async = true })
 end, { desc = "format the buf" })
+
 -- toggle file executable status
 vim.keymap.set("n", "<leader>x", function()
-    local file = vim.fn.expand("%")
-    if file == "" then
-        print("No file to toggle permission.")
-        return
-    end
+	local file = vim.fn.expand("%")
+	if file == "" then
+		print("No file to toggle permission.")
+		return
+	end
 
-    if vim.bo.filetype ~= "oil" then
-        local is_executable = vim.fn.getftype(file) == "file" and vim.fn.executable(file) == 1
-        -- if true remove executable, false make executable
-        local action = is_executable and "remove executable" or "make executable"
-        local answer = vim.fn.input("Do you want to " .. action .. "? (y/n): ")
-        if answer:lower() == "y" then
-            local command = is_executable and "!chmod -x " .. file or "!chmod +x " .. file
-            vim.cmd(command)
-        else
-            print("action Aborted")
-        end
-    else
-        print("oil filetype is not accepted.")
-    end
+	if vim.bo.filetype ~= "oil" then
+		local is_executable = vim.fn.getftype(file) == "file" and vim.fn.executable(file) == 1
+		-- if true remove executable, false make executable
+		local action = is_executable and "remove executable" or "make executable"
+		local answer = vim.fn.input("Do you want to " .. action .. "? (y/n): ")
+		if answer:lower() == "y" then
+			local command = is_executable and "!chmod -x " .. file or "!chmod +x " .. file
+			vim.cmd(command)
+		else
+			print("action Aborted")
+		end
+	else
+		print("oil filetype is not accepted.")
+	end
 end, { silent = true, desc = "toggle executable mode" })
-
 
 -- Setup Telescope with the delete buffer function
 vim.keymap.set("n", "<leader>tb", function()
-    local conf = require("telescope.config").values
-    local function make_finder()
-        local paths = {}
-        local buffers = vim.fn.getbufinfo({ buflisted = 1 })
+	local conf = require("telescope.config").values
+	local function make_finder()
+		local paths = {}
+		local buffers = vim.fn.getbufinfo({ buflisted = 1 })
 
-        for _, buf in ipairs(buffers) do
-            if buf.name ~= "" then
-                if vim.bo[buf.bufnr].modified then
-                    buf.name = buf.name .. "*"
-                end
+		for _, buf in ipairs(buffers) do
+			if buf.name ~= "" then
+				if vim.bo[buf.bufnr].modified then
+					buf.name = buf.name .. "*"
+				end
 
-                table.insert(paths, buf)
-            end
-        end
+				table.insert(paths, buf)
+			end
+		end
 
-        return require("telescope.finders").new_table({
-            results = paths,
-            entry_maker = function(entry)
-                local display_name = vim.fn.fnamemodify(entry.name, ":t")
-                return {
-                    value = entry.name,
-                    display = display_name,
-                    ordinal = entry.name,
-                    bufnr = entry.bufnr,
-                }
-            end,
-        })
-    end
-    require("telescope.pickers")
-        .new({}, {
-            finder = make_finder(),
-            prompt_title = "open buffers",
-            initial_mode = "normal",
-            previewer = conf.file_previewer({}),
-            sorter = conf.generic_sorter({}),
-            color_devicons = true,
-            layout_config = {
-                preview_width = 0.6,
-                width = 0.8,
-                height = 0.8,
-            },
-            mappings = {
-                i = {
-                    ["<Esc>"] = function(prompt_buffer_number)
-                        local state = require("telescope.actions.state")
-                        local current_picker = state.get_current_picker(prompt_buffer_number)
-                        -- Close the picker
-                        require("telescope.actions").close(prompt_buffer_number)
-                        current_picker:refresh(make_finder())
-                    end,
-                },
-            },
-            attach_mappings = function(prompt_buffer_number, map)
-                map("n", "d", function()
-                    local state = require("telescope.actions.state")
-                    local selection = state.get_selected_entry()
-                    local current_picker = state.get_current_picker(prompt_buffer_number)
-                    if selection then
-                        local buf = selection.bufnr
-                        local is_modified = vim.bo[buf].modified
-                        if is_modified then
-                            print("Buffer is modified! Cannot delete without saving.")
-                            return
-                        end
-                        vim.cmd("bdelete " .. buf)
-                        current_picker:refresh(make_finder())
-                    end
-                end)
-                return true
-            end,
-        })
-        :find()
+		return require("telescope.finders").new_table({
+			results = paths,
+			entry_maker = function(entry)
+				local display_name = vim.fn.fnamemodify(entry.name, ":t")
+				return {
+					value = entry.name,
+					display = display_name,
+					ordinal = entry.name,
+					bufnr = entry.bufnr,
+				}
+			end,
+		})
+	end
+	require("telescope.pickers")
+		.new({}, {
+			finder = make_finder(),
+			prompt_title = "open buffers",
+			initial_mode = "normal",
+			previewer = conf.file_previewer({}),
+			sorter = conf.generic_sorter({}),
+			color_devicons = true,
+			layout_config = {
+				preview_width = 0.6,
+				width = 0.8,
+				height = 0.8,
+			},
+			mappings = {
+				i = {
+					["<Esc>"] = function(prompt_buffer_number)
+						local state = require("telescope.actions.state")
+						local current_picker = state.get_current_picker(prompt_buffer_number)
+						-- Close the picker
+						require("telescope.actions").close(prompt_buffer_number)
+						current_picker:refresh(make_finder())
+					end,
+				},
+			},
+			attach_mappings = function(prompt_buffer_number, map)
+				map("n", "d", function()
+					local state = require("telescope.actions.state")
+					local selection = state.get_selected_entry()
+					local current_picker = state.get_current_picker(prompt_buffer_number)
+					if selection then
+						local buf = selection.bufnr
+						local is_modified = vim.bo[buf].modified
+						if is_modified then
+							print("Buffer is modified! Cannot delete without saving.")
+							return
+						end
+						vim.cmd("bdelete " .. buf)
+						current_picker:refresh(make_finder())
+					end
+				end)
+				return true
+			end,
+		})
+		:find()
 end, { desc = "Telescope Buffer" })

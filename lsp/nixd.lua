@@ -1,5 +1,10 @@
+--[[ return {
+	cmd = { "statix", "check", "--stdin" },
+	filetypes = { "nix" },
+	root_markers = { "flake.nix", ".git" },
+} ]]
 return {
-	cmd = { "nixd" },
+	cmd = { "nixd", "--inlay-hints=true", "--semantic-tokens=true" },
 
 	filetypes = { "nix" },
 	root_markers = {

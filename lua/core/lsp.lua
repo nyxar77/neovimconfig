@@ -6,14 +6,24 @@
 			},
 		},
 	},
-	root_markers = { ".git" },
+	root_markers = { ".git", "flake.nix" },
+}) ]]
+
+--[[ vim.filetype.add({
+	pattern = {
+		["docker%-compose%.ya?ml"] = "yaml.docker-compose",
+		["compose%.ya?ml"] = "yaml.docker-compose",
+	},
 }) ]]
 
 vim.lsp.enable({
+	"docker_language_server",
 	"clangd",
+	"neomake",
 	"gopls",
 	"emmylua_ls",
 	"nixd",
+	"statix",
 	"yamlls",
 	"intelephense",
 	"luau_lsp",
@@ -25,8 +35,6 @@ vim.lsp.enable({
 	"css_variables",
 	"tailwindcss",
 	"jsonls",
-	"docker_compose_language_service",
-	"dockerls",
 	"emmet_language_server",
 	"html",
 	"graphql",
@@ -35,15 +43,45 @@ vim.lsp.enable({
 	"helm_ls",
 	"asm-lsp",
 	"sqls",
+	"pyright",
+	"nginx",
+})
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local bufnr = args.buf
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+		if client and client.supports_method("textDocument/inlayHint") then
+			vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+
+			vim.api.nvim_create_autocmd("InsertEnter", {
+				buffer = bufnr,
+				callback = function()
+					vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+				end,
+			})
+
+			vim.api.nvim_create_autocmd("InsertLeave", {
+				buffer = bufnr,
+				callback = function()
+					vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+				end,
+			})
+		end
+	end,
 })
 
 vim.diagnostic.config({
-
 	virtual_lines = { current_line = true },
 	virtual_text = true,
 	underline = true,
 	update_in_insert = false,
 	severity_sort = true,
+	jump = {
+		float = "rounded",
+		wrap = true,
+	},
 	float = {
 		border = "rounded",
 		source = true,

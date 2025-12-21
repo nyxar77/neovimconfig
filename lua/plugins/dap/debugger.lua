@@ -1,7 +1,7 @@
 return {
 	{
 		"mfussenegger/nvim-dap",
-		event = "VeryLazy",
+		-- event = "VeryLazy",
 		-- lazy = true,
 		keys = {
 			{
@@ -134,89 +134,29 @@ return {
 				show_stop_reason = true,
 			})
 
-			--DANGER: DAP Config part
-
-			--[[ vim.keymap.set("n", "<F5>", dap.continue, { desc = "Start/Continue Debugging" })
-			vim.keymap.set("n", "<F8>", dap.step_over, { desc = "Step Over" })
-			vim.keymap.set("n", "<F9>", dap.step_into, { desc = "Step Into" })
-			vim.keymap.set("n", "<F10>", dap.step_out, { desc = "Step Out" })
-			vim.keymap.set("n", "<Leader>b", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
-			vim.keymap.set("n", "<Leader>B", function()
-				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-			end, { desc = "Set Conditional Breakpoint" })
-			-- Terminate the debugging session
-			vim.keymap.set("n", "<Leader>dq", dap.terminate, { desc = "Terminate Debug Session" })
-			vim.keymap.set("n", "<Leader>dp", dap.pause, { desc = "Pause Debugger" })
-
-			vim.keymap.set("n", "<Leader>dr", dap.repl.toggle, { desc = "Toggle Repl" })
-			vim.keymap.set("n", "<Leader>dl", dap.run_last, { desc = "Run Last Debugging Session" })
-]]
 			--DANGER: Adapters & configuration
 
-			-- require("dap-go").setup()
-			dap.adapters.gdb = {
-				name = "gdb",
+			--NOTE: cpp & c debugger
+			dap.adapters.codelldb = {
 				type = "executable",
-				command = vim.fn.trim(vim.fn.system("which gdb")),
-				-- command = "/nix/store/kzzlw5kavh8mkqr71jz2xmhdh3m2grf1-gdb-16.2/bin/gdb",
-				args = { "--quiet", "--interpreter=dap", "--eval-command", "set print pretty on" },
+				command = "codelldb",
 			}
 
 			dap.configurations.cpp = {
 				{
-					name = "Launch",
-					type = "gdb",
-					request = "launch",
-					program = function()
-						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-					end,
-					args = {}, -- provide arguments if needed
-					cwd = "${workspaceFolder}",
-					stopAtBeginningOfMainSubprogram = true,
-				},
-				{
-					name = "Select and attach to process",
-					type = "gdb",
-					request = "attach",
-					program = function()
-						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-					end,
-					pid = function()
-						local name = vim.fn.input("Executable name (filter): ")
-						return require("dap.utils").pick_process({ filter = name })
-					end,
-					cwd = "${workspaceFolder}",
-				},
-				{
-					name = "Attach to gdbserver :1234",
-					type = "gdb",
-					request = "attach",
-					target = "localhost:1234",
-					program = function()
-						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-					end,
-					cwd = "${workspaceFolder}",
-				},
-			}
-			--[[ dap.adapters.lldb = {
-				type = "executable",
-				command = "/usr/bin/lldb-vscode", -- adjust as needed, must be absolute path
-				name = "lldb",
-			}
-			dap.configurations.cpp = {
-				{
-					name = "Launch",
-					type = "lldb",
+					name = "Launch file",
+					type = "codelldb",
 					request = "launch",
 					program = function()
 						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
 					end,
 					cwd = "${workspaceFolder}",
 					stopOnEntry = false,
-					args = {},
 				},
-			} ]]
-
+			}
+			dap.configurations.c = dap.configurations.cpp
+			dap.configurations.rust = dap.configurations.cpp
+			--NOTE: php debugger
 			dap.adapters.php = {
 				type = "executable",
 				command = "node",
@@ -233,6 +173,127 @@ return {
 					pathMappings = {
 						["/var/www/html"] = "${workspaceFolder}",
 					},
+				},
+			}
+
+			--NOTE: go debugger
+			dap.adapters.delve = function(callback, config)
+				if config.mode == "remote" and config.request == "attach" then
+					callback({
+						type = "server",
+						host = config.host or "127.0.0.1",
+						port = config.port or "38697",
+					})
+				else
+					callback({
+						type = "server",
+						port = "${port}",
+						executable = {
+							command = "dlv",
+							args = { "dap", "-l", "127.0.0.1:${port}", "--log", "--log-output=dap" },
+							detached = vim.fn.has("win32") == 0,
+						},
+					})
+				end
+			end
+
+			dap.configurations.go = {
+				{
+					type = "delve",
+					name = "Debug",
+					request = "launch",
+					program = "${file}",
+				},
+				{
+					type = "delve",
+					name = "Debug test",
+					request = "launch",
+					mode = "test",
+					program = "${file}",
+				},
+				{
+					type = "delve",
+					name = "Debug test (go.mod)",
+					request = "launch",
+					mode = "test",
+					program = "./${relativeFileDirname}",
+				},
+			}
+
+			--NOTE: python debugger
+
+			dap.adapters.python = function(cb, config)
+				if config.request == "attach" then
+					---@diagnostic disable-next-line: undefined-field
+					local port = (config.connect or config).port
+					---@diagnostic disable-next-line: undefined-field
+					local host = (config.connect or config).host or "127.0.0.1"
+					cb({
+						type = "server",
+						port = assert(port, "`connect.port` is required for a python `attach` configuration"),
+						host = host,
+						options = {
+							source_filetype = "python",
+						},
+					})
+				else
+					cb({
+						type = "executable",
+						command = "path/to/virtualenvs/debugpy/bin/python",
+						args = { "-m", "debugpy.adapter" },
+						options = {
+							source_filetype = "python",
+						},
+					})
+				end
+			end
+
+			dap.configurations.python = {
+				{
+					type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+					request = "launch",
+					name = "Launch file",
+
+					program = "${file}", -- This configuration will launch the current file if used.
+					pythonPath = function()
+						local cwd = vim.fn.getcwd()
+						if vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
+							return cwd .. "/venv/bin/python"
+						elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+							return cwd .. "/.venv/bin/python"
+						else
+							return "/usr/bin/python"
+						end
+					end,
+				},
+			}
+			--NOTE: bash debugger
+			dap.adapters.bashdb = {
+				type = "executable",
+				command = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/bash-debug-adapter",
+				name = "bashdb",
+			}
+			dap.configurations.sh = {
+				{
+					type = "bashdb",
+					request = "launch",
+					name = "Launch file",
+					showDebugOutput = true,
+					pathBashdb = vim.fn.stdpath("data")
+						.. "/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
+					pathBashdbLib = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir",
+					trace = true,
+					file = "${file}",
+					program = "${file}",
+					cwd = "${workspaceFolder}",
+					pathCat = "cat",
+					pathBash = "/bin/bash",
+					pathMkfifo = "mkfifo",
+					pathPkill = "pkill",
+					args = {},
+					argsString = "",
+					env = {},
+					terminalKind = "integrated",
 				},
 			}
 		end,
@@ -268,12 +329,12 @@ return {
 			dap.listeners.after.launch.dapui_config = function()
 				dapui.open()
 			end
-			dap.listeners.before.event_terminated.dapui_config = function()
+			--[[ dap.listeners.before.event_terminated.dapui_config = function()
 				dapui.close()
 			end
 			dap.listeners.before.event_exited.dapui_config = function()
 				dapui.close()
-			end
+			end ]]
 		end,
 	},
 }

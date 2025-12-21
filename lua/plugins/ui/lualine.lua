@@ -36,8 +36,12 @@ return {
 					function()
 						if vim.bo.filetype == "toggleterm" then
 							return "terminal [" .. vim.b.toggle_number .. "]"
+						elseif vim.bo.filetype == "TelescopePrompt" then
+							return "[ PROMPT ]"
 						else
-							return "%f %r"
+							local path = vim.fn.expand("%:~:.")
+							path = path:gsub("^oil://", "")
+							return path .. " %m %r"
 						end
 					end,
 				},
@@ -60,7 +64,7 @@ return {
 							return vim.g.keyboardLayout or "?"
 						end,
 						color = { fg = "#fc770a" },
-						separator = " ",
+						--[[ 						separator = " ", ]]
 					},
 				},
 				lualine_z = { "tabs" },
