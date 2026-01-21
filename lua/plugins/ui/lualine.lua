@@ -1,5 +1,6 @@
 return {
 	"nvim-lualine/lualine.nvim",
+	lazy = true,
 	event = "VeryLazy",
 	config = function()
 		if vim.g.keyboardLayout == "azerty" then

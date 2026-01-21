@@ -12,6 +12,7 @@ pkgs.mkCustomShellNoCC {
     # lldb
     vscode-extensions.vadimcn.vscode-lldb.adapter
     clang
+    pkg-config
     cmake
     cmake-lint
     neocmakelsp

@@ -2,7 +2,7 @@ return {
 	{
 		"mfussenegger/nvim-dap",
 		-- event = "VeryLazy",
-		-- lazy = true,
+		lazy = false,
 		keys = {
 			{
 				"<leader>dB",

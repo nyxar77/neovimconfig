@@ -62,3 +62,6 @@ vim.api.nvim_create_user_command("Registers", function()
 		},
 	})
 end, {})
+-- Set relative line numbers color explicitly
+--[[ vim.api.nvim_set_hl(0, "LineNr", { fg = "#938aad", bg = "NONE" }) -- muted purple-grey
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#ebde76", bg = "NONE", bold = true }) -- yellow for the current line ]]

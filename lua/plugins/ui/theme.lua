@@ -2,7 +2,6 @@ return {
 	{
 		"hardhackerlabs/theme-vim",
 		priority = 999,
-		event = "VeryLazy",
 		lazy = false,
 		config = function()
 			local fallbackTheme = "hardhacker-darker"
@@ -16,9 +15,6 @@ return {
 				},
 				["catppuccin"] = {
 					lualine_theme = "catppuccin",
-				},
-				["dracula"] = {
-					lualine_theme = "dracula-nvim",
 				},
 				["gruvbox"] = {
 					lualine_theme = "gruvbox",
@@ -44,27 +40,16 @@ return {
 		end,
 	},
 	{
-		"alexmozaidze/palenight.nvim",
-	},
-	{
 		"olimorris/onedarkpro.nvim",
 		config = function()
 			require("onedarkpro").setup({
 				options = {
-					cursorline = false, -- Use cursorline highlighting?
+					cursorline = true, -- Use cursorline highlighting?
 					transparency = true, -- Use a transparent background?
 					terminal_colors = true, -- Use the theme's colors for Neovim's :terminal?
 					lualine_transparency = true, -- Center bar transparency?
 					highlight_inactive_windows = false, -- When the window is out of focus, change the normal background?
 				},
-			})
-		end,
-	},
-	{
-		"Mofiqul/dracula.nvim",
-		config = function()
-			require("dracula").setup({
-				transparent_bg = true,
 			})
 		end,
 	},
@@ -102,51 +87,28 @@ return {
 			},
 		},
 		config = function()
-			-- require("catppuccin").setup({
-			-- 	flavour = "mocha",
-			-- 	compile_path = vim.fn.stdpath("cache") .. "/catppuccin",
-			-- 	transparent_background = true,
-			-- 	term_colors = true,
-			-- 	styles = {
-			-- 		comments = { "italic" },
-			-- 		functions = { "bold" },
-			-- 		keywords = { "italic" },
-			-- 		operators = { "bold" },
-			-- 		conditionals = { "bold" },
-			-- 		loops = { "bold" },
-			-- 		booleans = { "bold", "italic" },
-			-- 		numbers = {},
-			-- 		types = {},
-			-- 		strings = {},
-			-- 		variables = {},
-			-- 		properties = {},
-			-- 	},
-			-- })
-
-			-- Define the Hardhacker Palette explicitly for reuse
 			local hardhacker = {
 				fg = "#e4dee9",
 				selection = "#3f3951",
-				comment = "#938aad", -- Muted purple-grey for comments
+				comment = "#938aad",
 
-				-- The Neon Accents
-				red = "#e965a5", -- Functions / Errors
-				green = "#b1f2a7", -- Strings
-				yellow = "#ebde76", -- Parameters / Warnings
-				blue = "#b1baf4", -- Keywords
-				purple = "#e192ef", -- Constants / Builtins
+				red = "#e965a5",
+				green = "#b1f2a7",
+				yellow = "#ebde76",
+				blue = "#b1baf4",
+				purple = "#e192ef",
 				pink = "#ff85c0",
-				cyan = "#b3f4f3", -- Types / Classes
-				orange = "#fab387", -- *NEW* Numbers / Booleans (Breaks up the red)
-				teal = "#94e2d5", -- *NEW* Operators / Delimiters
+				cyan = "#b3f4f3",
+				orange = "#fab387",
+				teal = "#94e2d5",
 
-				border = "#575268", -- Muted border (so it doesn't scream at you)
+				border = "#575268",
 			}
 			require("catppuccin").setup({
 				flavour = "mocha",
 				background = { light = "latte", dark = "mocha" },
-				transparent_background = true, -- Keep false for that deep void background
-				show_end_of_buffer = false, -- Hide the tildes (~) at end of buffer
+				transparent_background = true,
+				show_end_of_buffer = false,
 				term_colors = true,
 				auto_integrations = true,
 				dim_inactive = {
@@ -186,7 +148,6 @@ return {
 						surface1 = "#2b263b",
 						surface0 = "#1b182c",
 
-						-- Redistributing colors to avoid "Red Overload"
 						red = hardhacker.pin,
 						green = hardhacker.green,
 						yellow = hardhacker.yellow,
@@ -196,7 +157,7 @@ return {
 						teal = hardhacker.teal,
 						sky = hardhacker.cyan,
 						lavender = hardhacker.blue,
-						peach = hardhacker.yellow, -- Peach mapped to Orange
+						peach = hardhacker.yellow,
 						maroon = hardhacker.red,
 						rosewater = hardhacker.yellow,
 						flamingo = hardhacker.red,
@@ -249,6 +210,16 @@ return {
 						indent_scope_color = "magenta",
 					},
 				},
+			})
+		end,
+	},
+	{
+		"rasulomaroff/reactive.nvim",
+		lazy = false,
+		after = "catppuccin",
+		config = function()
+			require("reactive").setup({
+				load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
 			})
 		end,
 	},

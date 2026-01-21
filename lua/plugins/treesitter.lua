@@ -2,9 +2,9 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
-		lazy = false,
+		lazy = true,
 		branch = "main",
-		event = "BufEnter",
+		event = "BufReadPost",
 		config = function()
 			local treesitter = require("nvim-treesitter")
 			local ensure_installed = {
@@ -13,6 +13,8 @@ return {
 				"luau",
 				"javascript",
 				"typescript",
+				"jsx",
+				"tsx",
 				"c",
 				"cpp",
 				"php",
@@ -22,7 +24,7 @@ return {
 				"fish",
 				"bash",
 				"json",
-				"jsonc",
+				-- "jsonc",
 				"dockerfile",
 				"xml",
 				"python",
@@ -48,8 +50,10 @@ return {
 				"hyprlang",
 				"go",
 				"asm",
+				"blade",
 			}
 
+			-- require"nvim-treesitter.parsers".bl
 			treesitter.setup({
 				install_dir = vim.fn.stdpath("data") .. "/site",
 			})
@@ -57,7 +61,6 @@ return {
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = ensure_installed,
 				callback = function(args)
-					-- Check if a parser exists for this filetype
 					local ok = pcall(vim.treesitter.start, args.buf)
 					if not ok then
 						vim.notify("No Tree-sitter parser for " .. args.match, vim.log.levels.DEBUG)
@@ -67,6 +70,10 @@ return {
 			vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 			vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 			require("nvim-treesitter.config").setup({
+				highlight = {
+					enable = true,
+					additional_vim_regex_highlighting = false,
+				},
 				textobjects = {
 					move = {
 						enable = true,

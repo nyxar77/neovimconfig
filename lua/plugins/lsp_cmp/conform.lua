@@ -1,6 +1,7 @@
 return {
 	"stevearc/conform.nvim",
 	branch = "master",
+	lazy = true,
 	event = "BufWritePre",
 	config = function()
 		local conform = require("conform")
@@ -16,7 +17,7 @@ return {
 				html = { "prettier" },
 				css = { "prettier" },
 				yaml = { "yamlfmt" },
-				php = { "prettier" },
+				php = { "intelephense" },
 				graphql = { "prettier" },
 				markdown = { "prettier" },
 				nix = { "alejandra" },

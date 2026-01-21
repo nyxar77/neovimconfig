@@ -2,7 +2,7 @@ return {
 	"ThePrimeagen/harpoon",
 	branch = "harpoon2",
 	event = { "BufReadPost", "VeryLazy" },
-	lazy = false,
+	lazy = true,
 	dependencies = { "letieu/harpoon-lualine" },
 	config = function()
 		if vim.g.keyboardLayout == "azerty" then

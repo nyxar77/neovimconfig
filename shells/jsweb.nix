@@ -1,12 +1,9 @@
-{
-  self,
-  pkgs,
-  system,
-  ...
-}:
+{pkgs, ...}:
 pkgs.mkCustomShellNoCC {
-  packages = [
-    self.devShells.${system}.js
-    self.devShells.${system}.web
+  packages = with pkgs; [
+    nodejs_24
+    bun
+    emmet-language-server
+    vscode-langservers-extracted
   ];
 }
