@@ -1,80 +1,12 @@
 return {
-	{
+	--[[ {
 		"hardhackerlabs/theme-vim",
-		priority = 999,
 		lazy = false,
-		config = function()
-			local fallbackTheme = "hardhacker-darker"
-			local preferredTheme = "catppuccin"
-
-			local themes = {
-				["hardhacker-darker"] = {
-					lualine_theme = vim.g.hardhacker_lualine_theme,
-					hardhacker_hide_tilde = 1,
-					hardhacker_keyword_italic = 1,
-				},
-				["catppuccin"] = {
-					lualine_theme = "catppuccin",
-				},
-				["gruvbox"] = {
-					lualine_theme = "gruvbox",
-				},
-			}
-
-			local function setTheme(theme)
-				local ok, _ = pcall(vim.cmd, "colorscheme " .. theme)
-				if ok then
-					local cfg = themes[theme]
-					if cfg then
-						for k, v in pairs(cfg) do
-							vim.g[k] = v
-						end
-					end
-				end
-				return ok
-			end
-
-			if not setTheme(preferredTheme) then
-				setTheme(fallbackTheme)
-			end
-		end,
-	},
-	{
-		"olimorris/onedarkpro.nvim",
-		config = function()
-			require("onedarkpro").setup({
-				options = {
-					cursorline = true, -- Use cursorline highlighting?
-					transparency = true, -- Use a transparent background?
-					terminal_colors = true, -- Use the theme's colors for Neovim's :terminal?
-					lualine_transparency = true, -- Center bar transparency?
-					highlight_inactive_windows = false, -- When the window is out of focus, change the normal background?
-				},
-			})
-		end,
-	},
-	{
-		"ellisonleao/gruvbox.nvim",
-		config = function()
-			require("gruvbox").setup({
-				transparent_mode = true,
-				flavour = "mocha",
-				overrides = {
-					Pmenu = { link = "Normal" },
-				},
-				italic = {
-					strings = true, -- Make string literals italic
-					emphasis = true, -- Make emphasized text italic
-					comments = true, -- Make comments italic
-					operators = false, -- Make operators italic
-					folds = true, -- Make fold indicators italic
-				},
-			})
-		end,
-	},
+	}, ]]
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
+		priority = 999,
 		lazy = false,
 		opts = {
 			lsp_styles = {
@@ -211,6 +143,43 @@ return {
 					},
 				},
 			})
+			function colorscheme()
+				local fallbackTheme = "hardhacker-darker"
+				local preferredTheme = "catppuccin"
+
+				local themes = {
+					["hardhacker-darker"] = {
+						lualine_theme = vim.g.hardhacker_lualine_theme,
+						hardhacker_hide_tilde = 1,
+						hardhacker_keyword_italic = 1,
+					},
+					["catppuccin"] = {
+						lualine_theme = "catppuccin",
+					},
+					["gruvbox"] = {
+						lualine_theme = "gruvbox",
+					},
+				}
+
+				local function setTheme(theme)
+					local ok, _ = pcall(vim.cmd, "colorscheme " .. theme)
+					if ok then
+						local cfg = themes[theme]
+						if cfg then
+							for k, v in pairs(cfg) do
+								vim.g[k] = v
+							end
+						end
+					end
+					return ok
+				end
+
+				if not setTheme(preferredTheme) then
+					setTheme(fallbackTheme)
+				end
+			end
+
+			colorscheme()
 		end,
 	},
 	{
@@ -224,3 +193,37 @@ return {
 		end,
 	},
 }
+
+--[[ {
+		"olimorris/onedarkpro.nvim",
+		config = function()
+			require("onedarkpro").setup({
+				options = {
+					cursorline = true, -- Use cursorline highlighting?
+					transparency = true, -- Use a transparent background?
+					terminal_colors = true, -- Use the theme's colors for Neovim's :terminal?
+					lualine_transparency = true, -- Center bar transparency?
+					highlight_inactive_windows = false, -- When the window is out of focus, change the normal background?
+				},
+			})
+		end,
+	},
+	{
+		"ellisonleao/gruvbox.nvim",
+		config = function()
+			require("gruvbox").setup({
+				transparent_mode = true,
+				flavour = "mocha",
+				overrides = {
+					Pmenu = { link = "Normal" },
+				},
+				italic = {
+					strings = true, -- Make string literals italic
+					emphasis = true, -- Make emphasized text italic
+					comments = true, -- Make comments italic
+					operators = false, -- Make operators italic
+					folds = true, -- Make fold indicators italic
+				},
+			})
+		end,
+	}, ]]

@@ -37,6 +37,8 @@ return {
 				"scss",
 				"markdown",
 				"markdown_inline",
+				"typst",
+				"latex",
 				"yaml",
 				"toml",
 				"ini",
@@ -51,6 +53,7 @@ return {
 				"go",
 				"asm",
 				"blade",
+				"java",
 			}
 
 			-- require"nvim-treesitter.parsers".bl

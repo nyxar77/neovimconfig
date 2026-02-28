@@ -23,9 +23,11 @@
         config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) ["intelephense"];
         overlays = [
           (final: prev: {
-            # mkCustomShellNoCC = prev.mkShellNoCC.override (oldAttrs: {
-            #   packages = oldAttrs.packages ++ [pkgs.tree-sitter];
-            # });
+            /*
+               mkCustomShellNoCC = prev.mkShellNoCC.override (oldAttrs: {
+              packages = oldAttrs.packages ++ [pkgs.tree-sitter];
+            });
+            */
             mkCustomShellNoCC = args:
               prev.mkShellNoCC (args
                 // {
@@ -48,8 +50,10 @@
       mkImportShell = key: path:
         pkgs.lib.nameValuePair key (pkgs.callPackage ./shells/${path} {
           inherit
+            self
             pkgs
             unstablePkgs
+            system
             pkgs25
             ;
         });
@@ -67,13 +71,17 @@
         (mkImportShell "js" "javascript.nix")
         (mkImportShell "json" "json.nix")
         (mkImportShell "ts" "typescript.nix")
-        # (mkImportShell "jsweb" "jsweb.nix")
+        (mkImportShell "jsweb" "jsweb.nix")
         (mkImportShell "yaml" "yaml.nix")
         (mkImportShell "make" "make.nix")
         (mkImportShell "asm" "assembly.nix")
         (mkImportShell "sql" "sql.nix")
         (mkImportShell "bash" "bash.nix")
         (mkImportShell "docker" "docker.nix")
+        (mkImportShell "markdown" "markdown.nix")
+        (mkImportShell "latex" "latex.nix")
+        (mkImportShell "typst" "typst.nix")
+        (mkImportShell "java" "java.nix")
       ];
     });
 }

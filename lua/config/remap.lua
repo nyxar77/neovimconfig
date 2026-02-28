@@ -55,9 +55,9 @@ vim.keymap.set(
 )
 
 -- format code
-vim.keymap.set({ "n" }, "<leader>ff", function()
+--[[ vim.keymap.set({ "n" }, "<leader>ff", function()
 	require("conform").format({ lsp_fallback = true, async = true })
-end, { desc = "format the buf" })
+end, { desc = "format the buf" }) ]]
 
 -- toggle file executable status
 vim.keymap.set("n", "<leader>x", function()
@@ -117,7 +117,7 @@ vim.keymap.set("n", "<leader>tb", function()
 		.new({}, {
 			finder = make_finder(),
 			prompt_title = "open buffers",
-			initial_mode = "normal",
+			initial_mode = "insert",
 			previewer = conf.file_previewer({}),
 			sorter = conf.generic_sorter({}),
 			color_devicons = true,

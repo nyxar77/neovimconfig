@@ -1,6 +1,7 @@
 return {
 	command = { "sqls" },
-	filetypes = { "sql" },
+	filetypes = { "sql", "mysql" },
+	root_markers = { "config.yml" },
 	settings = {
 		sqls = {
 			connections = {

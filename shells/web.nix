@@ -5,7 +5,7 @@
   ...
 }:
 pkgs.mkCustomShellNoCC {
-  packages = [
+  buildInputs = [
     self.devShells.${system}.js
     self.devShells.${system}.ts
     self.devShells.${system}.jsweb

@@ -2,6 +2,7 @@ local function is_in_nvimconfig()
 	return (string.find(vim.fn.expand("%:p"), vim.fn.expand("~/.config/nvim"), 1, true)) ~= nil
 end
 
+---@type vim.lsp.Config
 return {
 	cmd = { "emmylua_ls" },
 	filetypes = { "lua" },

@@ -21,7 +21,7 @@ return {
 		require("lualine").setup({
 			icons_enabled = true,
 			options = {
-				theme = vim.g.hardhacker_lualine_theme,
+				-- theme = vim.g.hardhacker_lualine_theme,
 				-- theme = vim.g.lualine_theme,
 				-- theme = "catppuccin-machitto",
 				section_separators = { left = "", right = "" },
@@ -40,9 +40,9 @@ return {
 						elseif vim.bo.filetype == "TelescopePrompt" then
 							return "[ PROMPT ]"
 						else
-							local path = vim.fn.expand("%:~:.")
-							path = path:gsub("^oil://", "")
-							return path .. " %m %r"
+							local filename = vim.fn.expand("%:t") -- get filename only
+							local parent = vim.fn.expand("%:h:t") -- get parent folder name only
+							return parent .. "/" .. filename .. " %m %r"
 						end
 					end,
 				},

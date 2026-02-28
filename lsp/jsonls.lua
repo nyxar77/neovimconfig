@@ -1,13 +1,15 @@
+---@type vim.lsp.Config
 return {
+	cmd = { "vscode-json-language-server", "--stdio" },
+	filetypes = { "json", "jsonc" },
+	init_options = {
+		provideFormatter = true,
+	},
 	settings = {
 		json = {
-			schemas = {
-				{
-					fileMatch = { "tsconfig.json", "tsconfig.*.json" },
-					url = "https://json.schemastore.org/tsconfig.json",
-				},
-			},
+			schemas = require("schemastore").json.schemas(),
 			validate = { enable = true },
 		},
 	},
+	root_markers = { ".git" },
 }

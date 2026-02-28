@@ -1,8 +1,8 @@
 {pkgs, ...}:
 pkgs.mkCustomShellNoCC {
   packages = with pkgs; [
-    bun
-    emmet-language-server
-    # vscode-langservers-extracted
+    vimPlugins.nvim-java
+    jdt-language-server
+    openjdk
   ];
 }

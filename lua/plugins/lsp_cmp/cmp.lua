@@ -9,7 +9,7 @@ return {
 			{ "hrsh7th/cmp-cmdline" },
 			{ "hrsh7th/cmp-nvim-lsp" },
 			{ "neovim/nvim-lspconfig" },
-			{ "VonHeikemen/lsp-zero.nvim" },
+			--[[{ "VonHeikemen/lsp-zero.nvim" }, ]]
 			{
 				"L3MON4D3/LuaSnip",
 				build = "make install_jsregexp",
