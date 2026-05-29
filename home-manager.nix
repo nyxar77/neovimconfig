@@ -1,27 +1,86 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  ...
+}: {
   programs.neovim = {
     enable = true;
     defaultEditor = true;
 
     viAlias = true;
     vimAlias = true;
+    withPython3 = false;
+    withRuby = false;
 
     extraPackages = with pkgs; [
-      tree-sitter
+      # Core Neovim tools
+      git
       ripgrep
       fd
-      git
+      tree-sitter
+      gcc
+      gnumake
+      unzip
 
-      # LSPs
-      lua-language-server
+      # Nix
       nixd
       nil
+      alejandra
+      statix
+      deadnix
+
+      # Lua
+      lua-language-server
+      stylua
+
+      # Bash
       bash-language-server
-      vscode-langservers-extracted
+      shfmt
+
+      # Web
       typescript-language-server
-      pyright
+      vscode-langservers-extracted
+      emmet-language-server
+      tailwindcss-language-server
+      biome
+
+      # JSON/YAML
+      yaml-language-server
+      yamlfmt
+      yamllint
+
+      # Python
+      basedpyright
+      black
+      isort
+
+      # Go
       gopls
-      rust-analyzer
+      delve
+
+      # Rust
+      /* (inputs.fenix.packages.x86_64-linux.stable.withComponents [
+        "rustc"
+        "cargo"
+        "clippy"
+        "rustfmt"
+        "rust-src"
+      ])
+      inputs.fenix.packages.x86_64-linux.stable.rust-analyzer
+      pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter */
+
+      # PHP
+      intelephense
+
+      # Java
+      jdt-language-server
+
+      # SQL
+      sqls
+
+      # Markdown / Typst / LaTeX
+      marksman
+      tinymist
+      texlab
     ];
   };
 
