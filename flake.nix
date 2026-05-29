@@ -18,22 +18,21 @@
     flake-utils,
     ...
   } @ inputs:
-    flake-utils.lib.eachDefaultSystem (system: let
+    {
+      homeManagerModules.default = import ./home-manager.nix;
+    }
+    // flake-utils.lib.eachDefaultSystem (system: let
       unstablePkgs = import nixpkgs-unstable {inherit system;};
+      commonPkgs = [pkgs.tree-sitter];
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) ["intelephense"];
         overlays = [
           (final: prev: {
-            /*
-               mkCustomShellNoCC = prev.mkShellNoCC.override (oldAttrs: {
-              packages = oldAttrs.packages ++ [pkgs.tree-sitter];
-            });
-            */
             mkCustomShellNoCC = args:
               prev.mkShellNoCC (args
                 // {
-                  packages = (args.packages or []) ++ [pkgs.tree-sitter];
+                  packages = (args.packages or []) ++ commonPkgs;
                   # shellHook =
                   #   (args.shellHook or "")
                   #   + ''
@@ -88,44 +87,3 @@
       ];
     });
 }
-/*
-   buildInputs = with pkgs; [
-  # Core tooling
-  tree-sitter
-  clang-tools
-
-  # Language servers
-  bash-language-server
-  docker-language-server
-  docker-compose-language-service
-  emmet-language-server
-  gopls
-  haskell-language-server
-  helm-ls
-  hyprls
-  intelephense
-  lua-language-server
-  taplo
-  taplo-lsp
-  tailwindcss-language-server
-  typescript-language-server
-  vscode-langservers-extracted
-  yaml-language-server
-  nixd
-
-  # Linters / formatters
-  css-checker
-  csslint
-  eslint_d
-  stylua
-  alejandra
-  yamlfmt
-  yamllint
-
-  # Debuggers
-  delve
-  python312Packages.debugpy
-  vscode-js-debug
-];
-*/
-
