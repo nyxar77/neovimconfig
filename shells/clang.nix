@@ -1,11 +1,7 @@
-{
-  pkgs,
-  pkgs25,
-  ...
-}:
+{pkgs, ...}:
 pkgs.mkCustomShellNoCC {
   packages = with pkgs; [
-    (pkgs25.clang-tools.override
+    (pkgs.clang-tools.override
       {
         enableLibcxx = true;
       })

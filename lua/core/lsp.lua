@@ -44,11 +44,13 @@ vim.lsp.enable({
 	"helm_ls",
 	"asm_lsp",
 	"sqls",
-	"pyright",
+	-- "pyright",
+	"basedpyright",
 	"nginx_language_server",
 	"marksman",
 	"texlab",
 	"tinymist",
+	"rust_analyzer",
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -56,7 +58,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local bufnr = args.buf
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
 
-		if client and client.supports_method("textDocument/inlayHint") then
+		if client and client:supports_method("textDocument/inlayHint") then
 			vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
 
 			vim.api.nvim_create_autocmd("InsertEnter", {

@@ -1,9 +1,10 @@
 {pkgs, ...}:
 pkgs.mkCustomShellNoCC {
   packages = with pkgs; [
-    python312
+    python313
     isort
     black
-    pyright
+    # pyright
+    basedpyright
   ];
 }

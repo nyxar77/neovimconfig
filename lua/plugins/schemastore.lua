@@ -1,6 +1,6 @@
 return {
 	"b0o/SchemaStore.nvim",
-	lazy = true,
+	lazy = false,
 	event = {
 		"FileType json", --[[ "FileType yaml", "FileType yml" ]]
 	},

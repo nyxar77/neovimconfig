@@ -120,24 +120,21 @@ return {
 			})
 		end, { desc = "Telescope diagnostics" })
 
-		--[[ vim.keymap.set("n", "<leader>fr", function()
-      telescope.extensions.live_grep_args.live_grep_args({
+		vim.keymap.set("n", "<leader>fr", function()
+			telescope.extensions.live_grep_args.live_grep_args({
 
-
-
-        vimgrep_arguments = {
-          "rg",
-          "--color=never",
-          "--no-heading",
-          "--with-filename",
-          "--line-number",
-          "--column",
-          "--smart-case",
-          "--trim",
-        }
-
-      })
-    end, { desc = "Telescope Live grep w args" }) ]]
+				vimgrep_arguments = {
+					"rg",
+					"--color=never",
+					"--no-heading",
+					"--with-filename",
+					"--line-number",
+					"--column",
+					"--smart-case",
+					"--trim",
+				},
+			})
+		end, { desc = "Telescope Live grep w args" })
 		-- vim.keymap.set("n", "<leader>fd", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 	end,
 }
