@@ -7,23 +7,32 @@
     vimAlias = true;
     withPython3 = false;
     withRuby = false;
+
     plugins = with pkgs.vimPlugins; [
       nvim-lint
       conform-nvim
 
-      nvim-cmp
-      cmp-nvim-lsp
-      luasnip
-      friendly-snippets
-
       telescope-nvim
+      telescope-live-grep-args-nvim
       plenary-nvim
+      nvim-web-devicons
 
+      ccc-nvim
+      comment-nvim
+      todo-comments-nvim
+      nvim-ts-context-commentstring
+      cord-nvim
+      indent-blankline-nvim
+      oil-nvim
       lualine-nvim
       gitsigns-nvim
       which-key-nvim
+      snacks-nvim
 
+      catppuccin-nvim
+      #reactive-nvim
       nvim-treesitter
+      nvim-treesitter-textobjects
 
       harpoon2
       # add this package "letieu/harpoon-lualine"
@@ -38,21 +47,30 @@
       lazydev-nvim
       SchemaStore-nvim
 
-      auto-pairs
+      nvim-autopairs
       nvim-cmp
+      cmp-nvim-lsp
       cmp-path
       cmp-buffer
       cmp-cmdline
       nvim-lspconfig # deprecated
       luasnip
       cmp_luasnip
+      friendly-snippets
+      lspkind-nvim
 
       conform-nvim
+      nvim-nio
       nvim-dap
       nvim-dap-go
       nvim-dap-ui
       nvim-dap-virtual-text
       telescope-dap-nvim
+
+      nvim-ufo
+      promise-async
+
+      lz-n
     ];
 
     extraPackages = with pkgs; [
@@ -130,6 +148,10 @@
       marksman
       tinymist
       texlab
+
+      prettier
+
+    
     ];
   };
 
@@ -138,3 +160,4 @@
     recursive = true;
   };
 }
+
