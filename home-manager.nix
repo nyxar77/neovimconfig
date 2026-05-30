@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -31,6 +28,9 @@
       # Lua
       lua-language-server
       stylua
+      emmylua-ls
+      emmylua-check
+      emmylua-doc-cli
 
       # Bash
       bash-language-server
@@ -58,7 +58,8 @@
       delve
 
       # Rust
-      /* (inputs.fenix.packages.x86_64-linux.stable.withComponents [
+      /*
+         (inputs.fenix.packages.x86_64-linux.stable.withComponents [
         "rustc"
         "cargo"
         "clippy"
@@ -66,7 +67,8 @@
         "rust-src"
       ])
       inputs.fenix.packages.x86_64-linux.stable.rust-analyzer
-      pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter */
+      pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter
+      */
 
       # PHP
       intelephense
