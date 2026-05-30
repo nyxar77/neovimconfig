@@ -23,7 +23,6 @@ vim.lsp.enable({
 	"gopls",
 	"emmylua_ls",
 	"nixd",
-	"statix",
 	"intelephense",
 	"luau_lsp",
 	-- "eslint",

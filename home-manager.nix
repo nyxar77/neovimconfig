@@ -7,6 +7,53 @@
     vimAlias = true;
     withPython3 = false;
     withRuby = false;
+    plugins = with pkgs.vimPlugins; [
+      nvim-lint
+      conform-nvim
+
+      nvim-cmp
+      cmp-nvim-lsp
+      luasnip
+      friendly-snippets
+
+      telescope-nvim
+      plenary-nvim
+
+      lualine-nvim
+      gitsigns-nvim
+      which-key-nvim
+
+      nvim-treesitter
+
+      harpoon2
+      # add this package "letieu/harpoon-lualine"
+
+      toggleterm-nvim
+      undotree
+      url-open
+      # vimtex
+
+      lazygit-nvim
+
+      lazydev-nvim
+      SchemaStore-nvim
+
+      auto-pairs
+      nvim-cmp
+      cmp-path
+      cmp-buffer
+      cmp-cmdline
+      nvim-lspconfig # deprecated
+      luasnip
+      cmp_luasnip
+
+      conform-nvim
+      nvim-dap
+      nvim-dap-go
+      nvim-dap-ui
+      nvim-dap-virtual-text
+      telescope-dap-nvim
+    ];
 
     extraPackages = with pkgs; [
       # Core Neovim tools
@@ -87,7 +134,7 @@
   };
 
   xdg.configFile."nvim" = {
-    source = ./.;
+    source = ./nvim;
     recursive = true;
   };
 }
