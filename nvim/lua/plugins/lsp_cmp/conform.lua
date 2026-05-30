@@ -1,6 +1,7 @@
 require("lz.n").load({
 	{
 		"conform.nvim",
+		lazy = true,
 		event = "BufWritePre",
 		keys = {
 			{

@@ -1,7 +1,7 @@
 require("lz.n").load({
 	{
-		"nvim-lint",
-		event = "BufWritePost",
+		"lint",
+		event = { "BufWritePost", "BufReadPost" },
 		after = function()
 			local lint = require("lint")
 			lint.linters_by_ft = {

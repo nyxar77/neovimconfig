@@ -1,8 +1,7 @@
 require("lz.n").load({
 	{
-		"catppuccin",
-		priority = 999,
-		event = "BufReadPre",
+		"catppuccin-nvim",
+		lazy = false,
 		before = function()
 			local hardhacker = {
 				fg = "#e4dee9",

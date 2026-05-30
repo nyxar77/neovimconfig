@@ -1,12 +1,13 @@
 require("lz.n").load({
 	{
 		"snacks.nvim",
-		event = "BufReadPost",
+		event = "VimEnter",
+		priority = 500,
 		after = function()
 			require("snacks").setup({
-				bigfile = { enabled = true },
+				bigfile = { enabled = false },
 				dashboard = {
-					enabled = true,
+					enabled = false,
 					preset = {
 						keys = {
 							{

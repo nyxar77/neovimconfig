@@ -150,8 +150,6 @@
       texlab
 
       prettier
-
-    
     ];
   };
 
@@ -160,4 +158,3 @@
     recursive = true;
   };
 }
-

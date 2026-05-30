@@ -2,6 +2,7 @@ require("lz.n").load({
 	{
 		"nvim-treesitter",
 		event = "BufReadPost",
+		lazy = true,
 		after = function()
 			local treesitter = require("nvim-treesitter")
 			local ensure_installed = {

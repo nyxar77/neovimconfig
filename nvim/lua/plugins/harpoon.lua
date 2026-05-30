@@ -1,7 +1,7 @@
 require("lz.n").load({
 	{
-		"harpoon",
-		event = "BufReadPost",
+		"harpoon2",
+		lazy = false,
 		keys = {
 			{ "M", desc = "open harpoon window" },
 			{ "<leader>a", desc = "add file to harpoon list" },

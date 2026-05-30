@@ -1,7 +1,7 @@
 require("lz.n").load({
 	{
 		"which-key.nvim",
-		event = "BufReadPost",
+		event = "VimEnter",
 		keys = {
 			{
 				"<leader>?",

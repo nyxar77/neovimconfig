@@ -1,7 +1,7 @@
 require("lz.n").load({
 	{
 		"cord.nvim",
-		event = "BufReadPost",
+		lazy = true,
 		after = function()
 			require("cord").setup()
 		end,

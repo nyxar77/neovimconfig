@@ -1,21 +1,31 @@
 require("lz.n").load({
 	{
 		"oil.nvim",
+		lazy = false,
 		keys = {
-			{ "-", desc = "open oil" },
-			{ "+", desc = "close oil" },
+			{
+				"-",
+				function()
+					require("oil").open()
+				end,
+				desc = "open oil",
+			},
+			{
+				"+",
+				function()
+					require("oil").close()
+				end,
+				desc = "close oil",
+			},
 		},
 		after = function()
-			local oil = require("oil")
-			oil.setup({
+			require("oil").setup({
 				delete_to_trash = true,
 				keymaps = {
 					["<C-c>"] = { "actions.close", mode = "n" },
 					["<Esc>"] = { "actions.close", mode = "n", desc = "mapping to <C-c>" },
 				},
 			})
-			vim.keymap.set("n", "-", oil.open)
-			vim.keymap.set("n", "+", oil.close)
 		end,
 	},
 })

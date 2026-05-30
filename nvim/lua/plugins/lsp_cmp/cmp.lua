@@ -8,7 +8,8 @@ require("lz.n").load({
 	},
 	{
 		"nvim-cmp",
-		event = "InsertEnter",
+		priority = 100,
+		lazy = false,
 		load_after = { "LuaSnip" },
 		after = function()
 			local luasnip = require("luasnip")

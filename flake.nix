@@ -10,11 +10,9 @@
     };
   };
 
-  outputs =
-    { ... }:
-    {
-      homeManagerModules.default = import ./home-manager.nix;
-    };
+  outputs = {...}: {
+    homeManagerModules.default = import ./home-manager.nix;
+  };
 }
 # // flake-utils.lib.eachDefaultSystem (system: let
 #   unstablePkgs = import nixpkgs-unstable {inherit system;};
@@ -81,3 +79,4 @@
 #     (mkImportShell "java" "java.nix")
 #   ];
 # });
+

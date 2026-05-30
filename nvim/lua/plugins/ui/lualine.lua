@@ -1,7 +1,7 @@
 require("lz.n").load({
 	{
 		"lualine.nvim",
-		event = "BufReadPost",
+		event = "VimEnter",
 		after = function()
 			if vim.g.keyboardLayout == "azerty" then
 				Indicators = { "a", "z", "e", "s" }
@@ -14,7 +14,7 @@ require("lz.n").load({
 			local function dap_status()
 				local ok, dap = pcall(require, "dap")
 				if ok and dap.session() then
-					return "  debug"
+					return " debug"
 				end
 				return ""
 			end
@@ -22,7 +22,8 @@ require("lz.n").load({
 			require("lualine").setup({
 				icons_enabled = true,
 				options = {
-					section_separators = { left = "", right = "" },
+					theme = "auto",
+					section_separators = { left = "", right = "" },
 					component_separators = "",
 				},
 				disabled_filetypes = {
@@ -47,7 +48,7 @@ require("lz.n").load({
 					lualine_b = {
 						{
 							"harpoon2",
-							icon = " ",
+							icon = " ",
 							color_active = { fg = "#fc770a" },
 							_seperator = "d",
 						},
@@ -68,13 +69,13 @@ require("lz.n").load({
 					lualine_z = { "tabs" },
 				},
 				sections = {
-					lualine_a = { { icon = "", "mode", separator = { left = "" }, right_padding = 2 } },
+					lualine_a = { { icon = "", "mode", separator = { left = "" }, right_padding = 2 } },
 					lualine_b = { "filename", "branch" },
 					lualine_c = { "%=" },
 					lualine_x = { "diff", "diagnostics" },
 					lualine_y = { "filetype", "progress" },
 					lualine_z = {
-						{ "location", separator = { right = "" }, left_padding = 2 },
+						{ "location", separator = { right = "" }, left_padding = 2 },
 					},
 				},
 				extensions = {},
