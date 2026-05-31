@@ -10,7 +10,6 @@
 
     plugins = with pkgs.vimPlugins; [
       nvim-lint
-      conform-nvim
 
       telescope-nvim
       telescope-live-grep-args-nvim
@@ -48,7 +47,7 @@
       SchemaStore-nvim
 
       nvim-autopairs
-      nvim-cmp
+      nvim-cmp # autocompletion
       cmp-nvim-lsp
       cmp-path
       cmp-buffer
@@ -59,18 +58,19 @@
       friendly-snippets
       lspkind-nvim
 
-      conform-nvim
-      nvim-nio
+      conform-nvim # formatters
+
+      nvim-nio # dap
       nvim-dap
       nvim-dap-go
       nvim-dap-ui
       nvim-dap-virtual-text
       telescope-dap-nvim
 
-      nvim-ufo
+      nvim-ufo # folds
       promise-async
 
-      lz-n
+      lz-n # lazy loading
     ];
 
     extraPackages = with pkgs; [
@@ -150,6 +150,9 @@
       texlab
 
       prettier
+
+      # agents
+      codex
     ];
   };
 
