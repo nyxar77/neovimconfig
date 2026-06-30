@@ -34,6 +34,7 @@
       nvim-treesitter-textobjects
 
       harpoon2
+      # harpoon-lualine
       # add this package "letieu/harpoon-lualine"
 
       toggleterm-nvim
@@ -150,6 +151,8 @@
       texlab
 
       prettier
+
+      hyprls
 
       # agents
       codex
