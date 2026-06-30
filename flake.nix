@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     fenix = {
       url = "github:nix-community/fenix";
@@ -10,7 +11,24 @@
     };
   };
 
-  outputs = {...}: {
+  outputs = inputs @ {unstable, ...}: let
+    harpoonLualineOverlay = final: prev: let
+      unstablePkgs = import unstable {
+        system = prev.stdenv.hostPlatform.system;
+        config.allowUnfreePredicate = pkg:
+          builtins.elem (prev.lib.getName pkg) [
+            "harpoon-lualine"
+          ];
+      };
+    in {
+      vimPlugins =
+        prev.vimPlugins
+        // {
+          harpoon-lualine = unstablePkgs.vimPlugins.harpoon-lualine;
+        };
+    };
+  in {
+    overlays.default = harpoonLualineOverlay;
     homeManagerModules.default = import ./home-manager.nix;
   };
 }

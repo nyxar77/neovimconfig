@@ -3,12 +3,14 @@ require("lz.n").load({
 		"lualine.nvim",
 		event = "VimEnter",
 		after = function()
+			local indicators
+			local active_indicators
 			if vim.g.keyboardLayout == "azerty" then
-				Indicators = { "a", "z", "e", "s" }
-				Active_indicators = { "A", "Z", "E", "S" }
+				indicators = { "a", "z", "e", "s" }
+				active_indicators = { "A", "Z", "E", "S" }
 			else
-				Indicators = { "q", "w", "e", "s" }
-				Active_indicators = { "Q", "W", "E", "S" }
+				indicators = { "q", "w", "e", "s" }
+				active_indicators = { "Q", "W", "E", "S" }
 			end
 
 			local function dap_status()
@@ -25,11 +27,11 @@ require("lz.n").load({
 					theme = "auto",
 					section_separators = { left = "", right = "" },
 					component_separators = "",
-				},
-				disabled_filetypes = {
-					statusline = { "oil" },
-					tabline = { "oil" },
-					winbar = { "oil" },
+					disabled_filetypes = {
+						statusline = { "oil" },
+						tabline = { "oil" },
+						winbar = { "oil" },
+					},
 				},
 				tabline = {
 					lualine_a = {
@@ -49,8 +51,11 @@ require("lz.n").load({
 						{
 							"harpoon2",
 							icon = " ",
+							indicators = indicators,
+							active_indicators = active_indicators,
 							color_active = { fg = "#fc770a" },
-							_seperator = "d",
+							_separator = " ",
+							no_harpoon = "Harpoon not loaded",
 						},
 					},
 					lualine_c = {},

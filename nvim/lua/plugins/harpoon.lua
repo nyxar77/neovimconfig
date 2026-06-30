@@ -5,14 +5,15 @@ require("lz.n").load({
 		keys = {
 			{ "M", desc = "open harpoon window" },
 			{ "<leader>a", desc = "add file to harpoon list" },
-			{ "<C-S-P>", desc = "Switch to previous item" },
-			{ "<C-S-N>", desc = "Switch to next item" },
+			{ "Mp", desc = "Switch to previous item" },
+			{ "Mn", desc = "Switch to next item" },
 		},
 		after = function()
+			local indicators
 			if vim.g.keyboardLayout == "azerty" then
-				Indicators = { "a", "z", "e", "s" }
+				indicators = { "a", "z", "e", "s" }
 			else
-				Indicators = { "q", "w", "e", "s" }
+				indicators = { "q", "w", "e", "s" }
 			end
 
 			local harpoon = require("harpoon")
@@ -20,6 +21,7 @@ require("lz.n").load({
 			local finders = require("telescope.finders")
 			local conf = require("telescope.config").values
 			local actions_state = require("telescope.actions.state")
+			harpoon:setup()
 
 			vim.keymap.set("n", "M", function()
 				local function make_finder()
@@ -61,6 +63,7 @@ require("lz.n").load({
 								local selection = actions_state.get_selected_entry()
 								if selection and selection.harpoon_index then
 									harpoon:list():remove_at(selection.harpoon_index)
+									vim.notify("removed index " .. selection.harpoon_index)
 									local picker = actions_state.get_current_picker(prompt_bufnr)
 									picker:refresh(make_finder())
 								end
@@ -80,23 +83,23 @@ require("lz.n").load({
 				end
 			end, { desc = "add file to harpoon list" })
 
-			vim.keymap.set("n", "m" .. Indicators[1], function()
+			vim.keymap.set("n", "m" .. indicators[1], function()
 				harpoon:list():select(1)
 			end, { desc = "Switch to 1" })
-			vim.keymap.set("n", "m" .. Indicators[2], function()
+			vim.keymap.set("n", "m" .. indicators[2], function()
 				harpoon:list():select(2)
 			end, { desc = "Switch to 2" })
-			vim.keymap.set("n", "m" .. Indicators[3], function()
+			vim.keymap.set("n", "m" .. indicators[3], function()
 				harpoon:list():select(3)
 			end, { desc = "Switch to 3" })
-			vim.keymap.set("n", "m" .. Indicators[4], function()
+			vim.keymap.set("n", "m" .. indicators[4], function()
 				harpoon:list():select(4)
 			end, { desc = "Switch to 4" })
 
-			vim.keymap.set("n", "<C-S-P>", function()
+			vim.keymap.set("n", "Mp", function()
 				harpoon:list():prev()
 			end, { desc = "Switch to previous item" })
-			vim.keymap.set("n", "<C-S-N>", function()
+			vim.keymap.set("n", "Mn", function()
 				harpoon:list():next()
 			end, { desc = "Switch to next item" })
 		end,

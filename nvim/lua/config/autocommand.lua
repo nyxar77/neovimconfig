@@ -18,7 +18,10 @@ vim.api.nvim_create_user_command("SetLayout", function(opts)
 	local keyboardLayout = opts.args
 	if changeLayout.acceptedLayout(keyboardLayout) then
 		if changeLayout.savelayout(keyboardLayout) == true then
-			print("reload for changes to take affect!")
+			local layout = changeLayout.loadlayout()
+			vim.g.keyboardLayout = layout
+			vim.g.keyboard_layout = layout
+			print("layout set to " .. layout .. "; reload for harpoon indicators to update")
 		end
 	else
 		print("layout not supported!")

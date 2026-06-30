@@ -34,7 +34,7 @@
       nvim-treesitter-textobjects
 
       harpoon2
-      # harpoon-lualine
+      harpoon-lualine
       # add this package "letieu/harpoon-lualine"
 
       toggleterm-nvim
