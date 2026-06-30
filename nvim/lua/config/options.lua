@@ -82,6 +82,9 @@ vim.g.keyboardLayout = detect_keyboard_layout()
 vim.g.keyboard_layout = vim.g.keyboardLayout
 
 vim.g.mapleader = " "
+local undo_dir = vim.fn.expand("~/.vim/undodir")
+vim.fn.mkdir(undo_dir, "p")
+
 local options = {
 	-- Cursor shape "wide"
 	-- guicursor = "",
@@ -103,7 +106,7 @@ local options = {
 	-- backups
 	swapfile = false,
 	backup = false,
-	undodir = os.getenv("HOME") .. "/.vim/undodir",
+	undodir = undo_dir,
 	undofile = true,
 
 	--theme

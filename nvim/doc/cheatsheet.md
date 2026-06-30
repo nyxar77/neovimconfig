@@ -88,7 +88,7 @@ This file contains an overview of my keybindings and plugin usage in Neovim.
 ### 🪢 UndoTree
 | Keybinding | Description                         |
 |------------|-------------------------------------|
-| `<leader>u`| Show history tree of current buffer |
+| `<leader>u`| Toggle history tree of current buffer |
 | `u`        | Revert to older changes             |
 | `<C-r>`    | Revert to newer changes             |
 
