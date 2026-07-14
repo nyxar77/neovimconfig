@@ -12,15 +12,17 @@
   };
 
   outputs = inputs @ {unstable, ...}: let
-    harpoonLualineOverlay = final: prev: let
+    unstableOverlay = final: prev: let
       unstablePkgs = import unstable {
         system = prev.stdenv.hostPlatform.system;
         config.allowUnfreePredicate = pkg:
           builtins.elem (prev.lib.getName pkg) [
+            "codex"
             "harpoon-lualine"
           ];
       };
     in {
+      codex = unstablePkgs.codex;
       vimPlugins =
         prev.vimPlugins
         // {
@@ -28,7 +30,7 @@
         };
     };
   in {
-    overlays.default = harpoonLualineOverlay;
+    overlays.default = unstableOverlay;
     homeManagerModules.default = import ./home-manager.nix;
   };
 }
