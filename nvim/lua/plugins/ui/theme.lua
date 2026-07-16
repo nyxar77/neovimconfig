@@ -2,42 +2,54 @@ require("lz.n").load({
 	{
 		"catppuccin-nvim",
 		lazy = false,
+		priority = 100,
 		before = function()
+			-- HardHacker's terminal colors, expanded into a complete Catppuccin palette.
+			-- The ANSI colors below stay exact; the extra shades only fill editor UI roles.
 			local hardhacker = {
-				fg = "#e4dee9",
-				selection = "#3f3951",
-				comment = "#938aad",
-				red = "#e965a5",
-				green = "#b1f2a7",
-				yellow = "#ebde76",
-				blue = "#b1baf4",
-				purple = "#e192ef",
+				rosewater = "#f2e8f0",
+				flamingo = "#f0a6c9",
 				pink = "#ff85c0",
-				cyan = "#b3f4f3",
-				orange = "#fab387",
-				teal = "#94e2d5",
-				border = "#575268",
+				mauve = "#e192ef",
+				red = "#e965a5",
+				maroon = "#cf5d91",
+				peach = "#ebde76",
+				yellow = "#ebde76",
+				green = "#b1f2a7",
+				teal = "#9ce7d2",
+				sky = "#b3f4f3",
+				sapphire = "#8ed8ec",
+				blue = "#b1baf4",
+				lavender = "#cbc8ff",
+
+				text = "#e4dee9",
+				subtext1 = "#c9c1d4",
+				subtext0 = "#afa6bd",
+				overlay2 = "#938aad",
+				overlay1 = "#7f768f",
+				overlay0 = "#6b6379",
+				surface2 = "#575268",
+				surface1 = "#3f3951",
+				surface0 = "#342f42",
+				base = "#282433",
+				mantle = "#211e2a",
+				crust = "#191720",
 			}
 
+			---@diagnostic disable-next-line: param-type-mismatch
 			require("catppuccin").setup({
 				flavour = "mocha",
 				background = { light = "latte", dark = "mocha" },
 				transparent_background = true,
-				show_end_of_buffer = false,
-				term_colors = true,
-				auto_integrations = true,
-				dim_inactive = {
-					enabled = false,
-					shade = "dark",
-					percentage = 0.01,
-				},
-				no_italic = false,
-				no_bold = false,
-				no_underline = false,
 				float = {
 					transparent = true,
 					solid = true,
 				},
+
+				-- Catppuccin maps ANSI black to an editor overlay color. We apply the
+				-- real terminal palette after loading instead, so :terminal matches Kitty.
+				term_colors = false,
+				dim_inactive = { enabled = false },
 				styles = {
 					comments = { "italic" },
 					conditionals = { "italic" },
@@ -51,145 +63,193 @@ require("lz.n").load({
 					properties = {},
 					types = { "bold" },
 					operators = {},
+					miscs = {},
 				},
-				color_overrides = {
-					mocha = {
-						text = hardhacker.fg,
-						subtext1 = hardhacker.comment,
-						subtext0 = "#7a6f8f",
-						surface2 = hardhacker.selection,
-						surface1 = "#2b263b",
-						surface0 = "#1b182c",
-						red = hardhacker.pin,
-						green = hardhacker.green,
-						yellow = hardhacker.yellow,
-						blue = hardhacker.blue,
-						magenta = hardhacker.purple,
-						pink = hardhacker.pink,
-						teal = hardhacker.teal,
-						sky = hardhacker.cyan,
-						lavender = hardhacker.blue,
-						peach = hardhacker.yellow,
-						maroon = hardhacker.red,
-						rosewater = hardhacker.yellow,
-						flamingo = hardhacker.red,
+				lsp_styles = {
+					virtual_text = {
+						errors = { "italic" },
+						hints = { "italic" },
+						warnings = { "italic" },
+						information = { "italic" },
+						ok = { "italic" },
 					},
+					underlines = {
+						errors = { "undercurl" },
+						hints = { "undercurl" },
+						warnings = { "undercurl" },
+						information = { "undercurl" },
+						ok = { "undercurl" },
+					},
+					inlay_hints = { background = false },
 				},
+				---@diagnostic disable-next-line: missing-fields
+				color_overrides = {
+					mocha = hardhacker,
+				},
+				highlight_overrides = {
+					mocha = function(colors)
+						return {
+							Cursor = { fg = colors.mantle, bg = colors.red },
+							TermCursor = { fg = colors.mantle, bg = colors.red },
+							LineNr = { fg = colors.overlay2 },
+							CursorLineNr = { fg = colors.yellow, style = { "bold" } },
+							EndOfBuffer = { fg = colors.surface0 },
+							FloatBorder = { fg = colors.surface2 },
+							FloatTitle = { fg = colors.mantle, bg = colors.pink, style = { "bold" } },
+							WinSeparator = { fg = colors.surface1 },
+							WinBar = { fg = colors.lavender, style = { "bold" } },
+							Pmenu = { fg = colors.subtext1 },
+							PmenuSel = { fg = colors.text, bg = colors.surface1, style = { "bold" } },
+							PmenuMatch = { fg = colors.yellow, style = { "bold" } },
+
+							-- Keep the syntax varied; red is a signature accent rather than the base language.
+							Identifier = { fg = colors.text },
+							Function = { fg = colors.blue, style = { "bold" } },
+							Statement = { fg = colors.mauve },
+							Keyword = { fg = colors.mauve, style = { "italic" } },
+							Conditional = { fg = colors.mauve, style = { "italic" } },
+							Repeat = { fg = colors.mauve },
+							Exception = { fg = colors.red, style = { "italic" } },
+							Include = { fg = colors.pink, style = { "italic" } },
+							Operator = { fg = colors.text },
+							Constant = { fg = colors.yellow },
+							Number = { fg = colors.yellow },
+							Boolean = { fg = colors.yellow, style = { "bold" } },
+							Type = { fg = colors.sky, style = { "bold" } },
+							Structure = { fg = colors.sky, style = { "bold" } },
+
+							["@variable.builtin"] = { fg = colors.subtext1, style = { "italic" } },
+							["@variable.parameter"] = { fg = colors.subtext1 },
+							["@function.builtin"] = { fg = colors.yellow, style = { "bold" } },
+							["@function.method"] = { fg = colors.red, style = { "bold" } },
+							["@function.method.call"] = { fg = colors.red, style = { "bold" } },
+							["@function.macro"] = { fg = colors.pink, style = { "bold" } },
+							["@keyword.function"] = { fg = colors.mauve, style = { "italic" } },
+							["@keyword.operator"] = { fg = colors.mauve, style = { "italic" } },
+							["@keyword.return"] = { fg = colors.pink, style = { "italic" } },
+							["@keyword.exception"] = { fg = colors.red, style = { "italic" } },
+							["@constant.builtin"] = { fg = colors.yellow, style = { "bold" } },
+							["@type.builtin"] = { fg = colors.sky, style = { "bold" } },
+							["@constructor"] = { fg = colors.yellow },
+						}
+					end,
+				},
+
+				-- Auto-detection only supports a few package managers, not this Nix/lz.n setup.
+				default_integrations = false,
+				auto_integrations = false,
 				integrations = {
 					cmp = true,
 					dap = true,
 					dap_ui = true,
-					diffview = true,
-					dropbar = { enabled = true, color_mode = true },
-					fidget = true,
-					flash = true,
-					fzf = true,
 					gitsigns = true,
-					grug_far = true,
-					hop = true,
-					indent_blankline = { enabled = true, colored_indent_levels = true },
-					lsp_saga = true,
-					lsp_trouble = true,
-					markdown = true,
-					mason = true,
-					mini = { enabled = true },
-					native_lsp = {
+					indent_blankline = {
 						enabled = true,
-						virtual_text = {
-							errors = { "italic" },
-							hints = { "italic" },
-							warnings = { "italic" },
-							information = { "italic" },
-						},
-						underlines = {
-							errors = { "underline" },
-							hints = { "underline" },
-							warnings = { "underline" },
-							information = { "underline" },
-						},
+						scope_color = "mauve",
+						colored_indent_levels = false,
 					},
-					notify = true,
-					nvimtree = true,
-					rainbow_delimiters = true,
-					render_markdown = true,
-					semantic_tokens = true,
+					markview = true,
+					snacks = { enabled = true, indent_scope_color = "mauve" },
 					telescope = { enabled = true, style = "nvchad" },
-					treesitter = true,
-					treesitter_context = true,
+					ufo = true,
 					which_key = true,
-					snacks = { enabled = true, indent_scope_color = "magenta" },
 				},
 			})
 		end,
 		after = function()
-			local themes = {
-				["catppuccin"] = { lualine_theme = "catppuccin" },
-				["gruvbox"] = { lualine_theme = "gruvbox" },
-				["hardhacker-darker"] = {
-					lualine_theme = vim.g.hardhacker_lualine_theme,
-					hardhacker_hide_tilde = 1,
-					hardhacker_keyword_italic = 1,
-				},
+			vim.cmd.colorscheme("catppuccin")
+
+			local terminal = {
+				"#282433",
+				"#e965a5",
+				"#b1f2a7",
+				"#ebde76",
+				"#b1baf4",
+				"#e192ef",
+				"#b3f4f3",
+				"#eee9fc",
+				"#938aad",
+				"#e965a5",
+				"#b1f2a7",
+				"#ebde76",
+				"#b1baf4",
+				"#e192ef",
+				"#b3f4f3",
+				"#eee9fc",
 			}
 
-			local function setTheme(theme)
-				local ok, _ = pcall(vim.cmd, "colorscheme " .. theme)
-				if ok then
-					local cfg = themes[theme]
-					if cfg then
-						for k, v in pairs(cfg) do
-							vim.g[k] = v
-						end
-					end
-				end
-				return ok
+			for index, color in ipairs(terminal) do
+				vim.g["terminal_color_" .. (index - 1)] = color
 			end
-
-			if not setTheme("catppuccin") then
-				setTheme("hardhacker-darker")
-			end
-		end,
-	},
-	--[[ {
-		"reactive.nvim",
-		load_after = { "catppuccin" },
-		after = function()
-			require("reactive").setup({
-				load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
-			})
-		end,
-	}, ]]
-})
---[[ {
-		"olimorris/onedarkpro.nvim",
-		config = function()
-			require("onedarkpro").setup({
-				options = {
-					cursorline = true, -- Use cursorline highlighting?
-					transparency = true, -- Use a transparent background?
-					terminal_colors = true, -- Use the theme's colors for Neovim's :terminal?
-					lualine_transparency = true, -- Center bar transparency?
-					highlight_inactive_windows = false, -- When the window is out of focus, change the normal background?
-				},
-			})
 		end,
 	},
 	{
-		"ellisonleao/gruvbox.nvim",
-		config = function()
-			require("gruvbox").setup({
-				transparent_mode = true,
-				flavour = "mocha",
-				overrides = {
-					Pmenu = { link = "Normal" },
+		"reactive.nvim",
+		event = "VimEnter",
+		after = function()
+			local colors = require("catppuccin.palettes").get_palette("mocha")
+			local color_utils = require("catppuccin.utils.colors")
+
+			local function mode_color(color, tint_strength, line_number_color)
+				local row = color_utils.blend(color, colors.base, tint_strength)
+				return {
+					hl = {
+						ReactiveCursor = { fg = colors.base, bg = color },
+					},
+					winhl = {
+						CursorLine = { bg = row },
+						CursorLineNr = {
+							fg = line_number_color or color,
+							bg = row,
+							bold = true,
+						},
+					},
+				}
+			end
+
+			local normal = mode_color(colors.blue, 0.13, colors.yellow)
+			local insert = mode_color(colors.green, 0.14)
+			local command = mode_color(colors.yellow, 0.15)
+			local replace = mode_color(colors.red, 0.16)
+			local visual = mode_color(colors.mauve, 0.16)
+			local select = mode_color(colors.pink, 0.16)
+			local terminal = mode_color(colors.green, 0.14)
+
+			visual.winhl.Visual = { bg = color_utils.blend(colors.mauve, colors.base, 0.32) }
+			select.winhl.Visual = { bg = color_utils.blend(colors.pink, colors.base, 0.32) }
+
+			require("reactive").add_preset({
+				name = "hardhacker-modes",
+				init = function()
+					vim.opt.guicursor:append("a:ReactiveCursor")
+					vim.opt.cursorline = true
+				end,
+				static = {
+					winhl = {
+						inactive = {
+							CursorLine = { bg = colors.mantle },
+							CursorLineNr = { fg = colors.overlay2, bg = colors.mantle, bold = true },
+						},
+					},
 				},
-				italic = {
-					strings = true, -- Make string literals italic
-					emphasis = true, -- Make emphasized text italic
-					comments = true, -- Make comments italic
-					operators = false, -- Make operators italic
-					folds = true, -- Make fold indicators italic
+				modes = {
+					n = normal,
+					[{ "i", "niI" }] = insert,
+					c = command,
+					[{ "R", "niR", "niV" }] = replace,
+					[{ "v", "V", "\x16" }] = visual,
+					[{ "s", "S", "\x13" }] = select,
+					t = terminal,
+					no = {
+						operators = {
+							[{ "gu", "gU", "g~", "~" }] = mode_color(colors.pink, 0.2),
+							d = mode_color(colors.red, 0.22),
+							y = mode_color(colors.yellow, 0.22),
+							c = mode_color(colors.blue, 0.22),
+						},
+					},
 				},
 			})
 		end,
-	}, ]]
+	},
+})

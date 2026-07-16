@@ -15,7 +15,7 @@
     unstableOverlay = final: prev: let
       unstablePkgs = import unstable {
         system = prev.stdenv.hostPlatform.system;
-        config.allowUnfreePredicate = pkg:
+        config."allowUnfreePredicate" = pkg:
           builtins.elem (prev.lib.getName pkg) [
             "codex"
             "harpoon-lualine"
@@ -27,6 +27,7 @@
         prev.vimPlugins
         // {
           harpoon-lualine = unstablePkgs.vimPlugins.harpoon-lualine;
+          reactive-nvim = unstablePkgs.vimPlugins.reactive-nvim;
         };
     };
   in {

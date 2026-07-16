@@ -29,7 +29,7 @@
       snacks-nvim
 
       catppuccin-nvim
-      #reactive-nvim
+      reactive-nvim
       nvim-treesitter
       nvim-treesitter-textobjects
 

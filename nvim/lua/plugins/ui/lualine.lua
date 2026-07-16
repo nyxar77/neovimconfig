@@ -53,7 +53,7 @@ require("lz.n").load({
 							icon = " ",
 							indicators = indicators,
 							active_indicators = active_indicators,
-							color_active = { fg = "#fc770a" },
+							color_active = { fg = "#ebde76" },
 							_separator = " ",
 							no_harpoon = "Harpoon not loaded",
 						},
@@ -68,7 +68,7 @@ require("lz.n").load({
 							function()
 								return vim.g.keyboardLayout or "?"
 							end,
-							color = { fg = "#fc770a" },
+							color = { fg = "#ebde76" },
 						},
 					},
 					lualine_z = { "tabs" },
