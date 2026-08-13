@@ -34,6 +34,7 @@ This file contains an overview of my keybindings and plugin usage in Neovim.
 | Keybinding | Description         |
 |------------|---------------------|
 | `<C-;>`    | Open terminal       |
+| `<leader>t` | Select an active terminal |
 
 ---
 

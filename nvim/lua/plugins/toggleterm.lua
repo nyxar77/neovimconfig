@@ -1,7 +1,7 @@
 require("lz.n").load({
 	{
 		"toggleterm.nvim",
-		keys = { "<M-,>" },
+		keys = { "<M-,>", "<leader>t" },
 		after = function()
 			require("toggleterm").setup({
 				open_mapping = [[<M-,>]],
@@ -17,17 +17,14 @@ require("lz.n").load({
 					},
 				},
 			})
+			vim.keymap.set("n", "<leader>t", "<cmd>TermSelect<cr>", {
+				desc = "select terminal",
+			})
 
 			function _G.set_terminal_keymaps()
 				local opts = { buffer = 0 }
 				vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
 				vim.keymap.set("t", "²", [[<C-\><C-n>]], opts)
-				vim.keymap.set("n", "<leader>t,", function()
-					local ok, _ = pcall(vim.cmd.TermSelect())
-					if ok then
-						vim.notify("No terms is loaded yet", "info")
-					end
-				end, { noremap = true, desc = "term select" })
 			end
 
 			vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
