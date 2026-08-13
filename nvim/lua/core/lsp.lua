@@ -120,6 +120,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		map("K", function()
 			vim.lsp.buf.hover({ border = "rounded" })
 		end, "Hover Documentation")
+		map("gd", telescope_builtins.lsp_definitions, "Goto Definition")
 		map("grd", vim.lsp.buf.declaration, "Goto Declaration")
 		map("gra", vim.lsp.buf.code_action, "Code Action")
 		map("grn", vim.lsp.buf.rename, "Rename all references")
@@ -179,13 +180,15 @@ local function debounce(fn, ms)
 end
 
 -- Setup LSP highlights once per buffer
+local lsp_document_highlight_group = vim.api.nvim_create_augroup("LspDocumentHighlight", { clear = true })
+
 local function setup_highlight(bufnr)
-	local group = vim.api.nvim_create_augroup("LspDocumentHighlight", { clear = true })
+	vim.api.nvim_clear_autocmds({ group = lsp_document_highlight_group, buffer = bufnr })
 
 	-- Debounced document highlight
 	vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 		buffer = bufnr,
-		group = group,
+		group = lsp_document_highlight_group,
 		callback = debounce(function()
 			vim.lsp.buf.document_highlight()
 		end, 150), -- 150ms debounce
@@ -193,7 +196,7 @@ local function setup_highlight(bufnr)
 
 	vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
 		buffer = bufnr,
-		group = group,
+		group = lsp_document_highlight_group,
 		callback = function()
 			vim.lsp.buf.clear_references()
 		end,
@@ -205,17 +208,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
 		for _, client in ipairs(clients) do
-			if
-
-				client.capabilities.textDocument ~= nil
-				and client.capabilities.textDocument.documentHighlight ~= nil
-				and client.capabilities.textDocument.documentHighlight.dynamicRegistration == true
-			then
+			if client:supports_method("textDocument/documentHighlight", args.buf) then
 				setup_highlight(args.buf)
 			end
-			--[[ if client.name ~= "asm-lsp" and client.name ~= "sqls" then
-				setup_highlight(args.buf)
-			end ]]
 		end
 	end,
 })
@@ -225,6 +220,6 @@ vim.api.nvim_create_autocmd("LspDetach", {
 	group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
 	callback = function(event2)
 		vim.lsp.buf.clear_references()
-		vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
+		vim.api.nvim_clear_autocmds({ group = lsp_document_highlight_group, buffer = event2.buf })
 	end,
 })

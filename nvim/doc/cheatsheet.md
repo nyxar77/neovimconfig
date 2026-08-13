@@ -23,6 +23,7 @@ This file contains an overview of my keybindings and plugin usage in Neovim.
 | `<leader>vds`    | Search document symbols                                  |
 | `<leader>vrr`    | Find references                                          |
 | `<leader>vca`    | Show code actions                                        |
+| `gd`             | Go to definition                                        |
 | `<leader>vi`     | Show LSP implementations                                 |
 | `<leader>vtd`    | Show LSP type definitions                                |
 | `<C-k>`          | jump forward                                             |
