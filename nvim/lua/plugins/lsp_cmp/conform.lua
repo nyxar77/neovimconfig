@@ -33,7 +33,7 @@ require("lz.n").load({
 					yaml = { "yamlfmt" },
 					graphql = { "prettier" },
 					markdown = { "prettier" },
-					nix = { "alejandra" },
+					nix = { "nixfmt" },
 					hypr = { "hyprls" },
 					cpp = { "lsp" },
 					c = { "lsp" },

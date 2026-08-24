@@ -86,8 +86,7 @@
 
       # Nix
       nixd
-      nil
-      alejandra
+      nixfmt
       statix
       deadnix
 

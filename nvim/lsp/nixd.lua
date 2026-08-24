@@ -1,33 +1,45 @@
---[[ return {
-	cmd = { "statix", "check", "--stdin" },
-	filetypes = { "nix" },
-	root_markers = { "flake.nix", ".git" },
-} ]]
+local home = vim.env.HOME
+
 return {
-	cmd = { "nixd", "--inlay-hints=true", "--semantic-tokens=true" },
+	cmd = {
+		"nixd",
+		"--inlay-hints=true",
+		"--semantic-tokens=true",
+	},
 
 	filetypes = { "nix" },
+
 	root_markers = {
+		"flake.nix",
 		".git",
-		{
-			"flake.nix",
-			"flake.lock",
-		},
 	},
+
 	settings = {
 		nixd = {
 			nixpkgs = {
-				expr = "import <nixpkgs> { }",
+				expr = 'import (builtins.getFlake "/etc/nixos").inputs.nixpkgs { }',
 			},
-			formatting = {
+
+			--[[ formatting = {
 				command = { "nixfmt" },
+			}, ]]
+
+			diagnostic = {
+				suppress = {
+					"sema-extra-with",
+				},
 			},
+
 			options = {
 				nixos = {
 					expr = '(builtins.getFlake "/etc/nixos").nixosConfigurations.nixos.options',
 				},
+
 				home_manager = {
-					expr = '(builtins.getFlake "/home/nyxar/.config/home-manager").homeConfigurations.nyxar.options',
+					expr = string.format(
+						'(builtins.getFlake "%s/.config/home-manager").homeConfigurations.nyxar.options',
+						home
+					),
 				},
 			},
 		},

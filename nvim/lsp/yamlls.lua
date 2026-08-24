@@ -34,6 +34,7 @@ return {
 				["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
 				["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
 				["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/all.json"] = "*.k8s.{yml,yaml}",
+				["https://raw.githubusercontent.com/nyxar77/Eden/refs/heads/master/schemas/pipeline-v1.schema.json?token=GHSAT0AAAAAAECAHK7RK7G7QHCE5YNW5DAU2TKKPQA"] = "*.ed.{yml,yaml}",
 			},
 			format = { enable = true },
 			completion = true,
