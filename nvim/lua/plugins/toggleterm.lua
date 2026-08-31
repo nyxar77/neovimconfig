@@ -1,7 +1,7 @@
 require("lz.n").load({
 	{
 		"toggleterm.nvim",
-		keys = { "<M-,>", "<leader>t" },
+		keys = { "<M-,>", "<leader>tt" },
 		after = function()
 			require("toggleterm").setup({
 				open_mapping = [[<M-,>]],
@@ -17,7 +17,7 @@ require("lz.n").load({
 					},
 				},
 			})
-			vim.keymap.set("n", "<leader>t", "<cmd>TermSelect<cr>", {
+			vim.keymap.set("n", "<leader>tt", "<cmd>TermSelect<cr>", {
 				desc = "select terminal",
 			})
 

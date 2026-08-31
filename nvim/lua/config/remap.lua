@@ -2,12 +2,18 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 -- clear highlight after search
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
 -- create new tab
-vim.keymap.set("n", "<leader>tt", "<cmd>tabnew<CR>", { desc = "new tab" })
+-- DANGER: disabled
+
+--[[ vim.keymap.set("n", "<leader>tt", "<cmd>tabnew<CR>", { desc = "new tab" })
 vim.keymap.set("n", "<leader>tn", "<cmd>tabnext<CR>", { desc = "next tab" })
-vim.keymap.set("n", "<leader>tp", "<cmd>tabprev<CR>", { desc = "previous tab" })
+vim.keymap.set("n", "<leader>tp", "<cmd>tabprev<CR>", { desc = "previous tab" }) ]]
+
 -- move multiple selected line
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+
+vim.keymap.set("v", ">", ">gv")
+vim.keymap.set("v", "<", "<gv")
 
 -- move next line to the cursor line to the end
 vim.keymap.set("n", "J", "mzJ`z")
