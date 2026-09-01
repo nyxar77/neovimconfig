@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -42,7 +42,7 @@
       url-open
       # vimtex
 
-      lazygit-nvim
+      # lazygit-nvim
 
       lazydev-nvim
       SchemaStore-nvim
@@ -124,15 +124,15 @@
 
       # Rust
       /*
-         (inputs.fenix.packages.x86_64-linux.stable.withComponents [
-        "rustc"
-        "cargo"
-        "clippy"
-        "rustfmt"
-        "rust-src"
-      ])
-      inputs.fenix.packages.x86_64-linux.stable.rust-analyzer
-      pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter
+           (inputs.fenix.packages.x86_64-linux.stable.withComponents [
+          "rustc"
+          "cargo"
+          "clippy"
+          "rustfmt"
+          "rust-src"
+        ])
+        inputs.fenix.packages.x86_64-linux.stable.rust-analyzer
+        pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter
       */
 
       # PHP
