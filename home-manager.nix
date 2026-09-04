@@ -37,6 +37,7 @@
       harpoon-lualine
       # add this package "letieu/harpoon-lualine"
 
+      auto-session
       toggleterm-nvim
       undotree
       url-open
