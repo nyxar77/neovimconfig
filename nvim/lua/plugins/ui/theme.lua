@@ -146,7 +146,7 @@ require("lz.n").load({
 					indent_blankline = {
 						enabled = true,
 						scope_color = "mauve",
-						colored_indent_levels = false,
+						colored_indent_levels = true,
 					},
 					markview = true,
 					snacks = { enabled = true, indent_scope_color = "mauve" },

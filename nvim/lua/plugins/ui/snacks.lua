@@ -40,7 +40,7 @@ require("lz.n").load({
 					},
 				},
 				explorer = { enabled = false },
-				indent = { enabled = true },
+				indent = { enabled = false },
 				input = { enabled = true },
 				picker = { enabled = true },
 				notifier = { enabled = true, timeout = 6500 },

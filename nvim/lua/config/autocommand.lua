@@ -4,14 +4,19 @@ local function augroup(name)
 	return vim.api.nvim_create_augroup("nyxar_" .. name, { clear = true })
 end
 
--- setting the cheatsheet command
 vim.api.nvim_create_user_command("Cheatsheet", function()
-	-- vim.cmd('e ~/.config/nvim/doc/cheatsheet.md')
-	vim.schedule(function()
-		vim.bo.modifiable = false
-		vim.bo.readonly = true
-	end)
-end, {})
+	local path = vim.fn.stdpath("config") .. "/doc/cheatsheet.md"
+	if vim.fn.filereadable(path) == 0 then
+		vim.notify("Cheatsheet not found: " .. path, vim.log.levels.ERROR)
+		return
+	end
+
+	vim.cmd("tabedit " .. vim.fn.fnameescape(path))
+	vim.bo.buflisted = false
+	vim.bo.readonly = true
+	vim.bo.modifiable = false
+	vim.keymap.set("n", "q", "<cmd>tabclose<cr>", { buffer = true, silent = true, desc = "Close cheatsheet" })
+end, { desc = "Open the Neovim configuration cheatsheet" })
 
 -- set keyboard layout
 vim.api.nvim_create_user_command("SetLayout", function(opts)

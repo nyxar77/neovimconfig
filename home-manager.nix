@@ -121,7 +121,11 @@
 
       # Go
       gopls
-      delve
+
+      # Debug adapters (enable when needed)
+      # delve
+      # vscode-extensions.vadimcn.vscode-lldb.adapter
+      # (python3.withPackages (pythonPackages: [ pythonPackages.debugpy ]))
 
       # Rust
       /*
