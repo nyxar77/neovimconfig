@@ -1,0 +1,65 @@
+name: Dependency health
+
+on:
+  schedule:
+    - cron: "23 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-health
+  cancel-in-progress: true
+
+jobs:
+  current-upstreams:
+    name: Current package upstreams
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
+      - name: Build package metadata
+        id: metadata
+        run: |
+          metadata_path="$(nix build .#package-metadata --no-link --print-out-paths)"
+          printf 'path=%s\n' "$metadata_path" >>"$GITHUB_OUTPUT"
+      - name: Check archived and stale upstream repositories
+        run: nix develop .#ci --command ./scripts/check-upstreams "$PACKAGE_METADATA_PATH"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_METADATA_PATH: ${{ steps.metadata.outputs.path }}
+
+  future-compatibility:
+    name: Latest-input compatibility
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
+      - name: Resolve the latest dependency revisions
+        run: nix flake update
+      - name: Build against the latest revisions
+        run: nix flake check --print-build-logs
+      - name: Test Neovim against the latest revisions
+        run: |
+          nvim_path="$(nix build .#neovim --no-link --print-out-paths)"
+          NVIM_BIN="$nvim_path/bin/nvim" ./scripts/check
+      - name: Summarize available input updates
+        run: |
+          {
+            printf '### Latest-input compatibility\n\n'
+            printf 'The configuration successfully built and started after updating all flake inputs in this disposable runner.\n\n'
+            printf '```diff\n'
+            git diff -- flake.lock
+            printf '```\n'
+          } >>"$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+benchmark_root="$(mktemp -d -t neovimconfig-benchmark.XXXXXXXXXX)"
+nvim_bin="${NVIM_BIN:-nvim}"
+runs="${NVIM_BENCHMARK_RUNS:-10}"
+warning_ms="${NVIM_STARTUP_WARNING_MS:-750}"
+failure_ms="${NVIM_STARTUP_FAILURE_MS:-2000}"
+
+cleanup() {
+  rm -rf -- "$benchmark_root"
+}
+trap cleanup EXIT
+
+mkdir -p "$benchmark_root/config" "$benchmark_root/state"
+ln -s "$config_root/nvim" "$benchmark_root/config/nvim"
+
+export NVIM_LOG_FILE="$benchmark_root/nvim.log"
+export XDG_CONFIG_HOME="$benchmark_root/config"
+export XDG_STATE_HOME="$benchmark_root/state"
+
+times_file="$benchmark_root/times"
+for ((run = 1; run <= runs; run++)); do
+  startup_file="$benchmark_root/startup-$run.log"
+  "$nvim_bin" --headless -i NONE --startuptime "$startup_file" "$config_root/README.md" "+qa!"
+  awk '/--- NVIM STARTED ---/ { value = $1 } END { print value }' "$startup_file" >>"$times_file"
+done
+
+if grep -qvE '^[0-9]+([.][0-9]+)?$' "$times_file"; then
+  printf 'error: Neovim produced an invalid startup-time measurement\n' >&2
+  exit 1
+fi
+
+median_ms="$(sort -n "$times_file" | awk '{ values[NR] = $1 } END { if (NR % 2) print values[(NR + 1) / 2]; else printf "%.3f", (values[NR / 2] + values[NR / 2 + 1]) / 2 }')"
+maximum_ms="$(sort -n "$times_file" | tail -n 1)"
+
+printf 'Neovim startup: median=%sms maximum=%sms runs=%s\n' "$median_ms" "$maximum_ms" "$runs"
+
+if awk -v measured="$median_ms" -v threshold="$failure_ms" 'BEGIN { exit !(measured > threshold) }'; then
+  printf 'error: median startup time %sms exceeds the %sms failure threshold\n' "$median_ms" "$failure_ms" >&2
+  exit 1
+fi
+
+if awk -v measured="$median_ms" -v threshold="$warning_ms" 'BEGIN { exit !(measured > threshold) }'; then
+  if [[ -n "${GITHUB_ACTIONS:-}" ]]; then
+    printf '::warning title=Neovim startup regression::Median startup time is %sms; warning threshold is %sms.\n' "$median_ms" "$warning_ms"
+  else
+    printf 'warning: median startup time %sms exceeds the %sms warning threshold\n' "$median_ms" "$warning_ms" >&2
+  fi
+fi
+
+if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+  {
+    printf '### Neovim startup performance\n\n'
+    printf '| Median | Maximum | Runs | Warning | Failure |\n'
+    printf '|---:|---:|---:|---:|---:|\n'
+    printf '| %sms | %sms | %s | %sms | %sms |\n' "$median_ms" "$maximum_ms" "$runs" "$warning_ms" "$failure_ms"
+  } >>"$GITHUB_STEP_SUMMARY"
+fi

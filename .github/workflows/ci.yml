@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Reproducible build and runtime tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
+      - name: Evaluate and build every flake check
+        run: nix flake check --print-build-logs
+      - name: Test the repository configuration
+        run: |
+          nvim_path="$(nix build .#neovim --no-link --print-out-paths)"
+          NVIM_BIN="$nvim_path/bin/nvim" ./scripts/check
+      - name: Check startup performance
+        run: |
+          nvim_path="$(nix build .#neovim --no-link --print-out-paths)"
+          NVIM_BIN="$nvim_path/bin/nvim" ./scripts/benchmark
+
+  quality-and-security:
+    name: Quality and security
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository and history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
+      - name: Check shell scripts
+        run: nix develop .#ci --command shellcheck scripts/check scripts/benchmark scripts/check-upstreams
+      - name: Check Nix configuration
+        run: |
+          nix develop .#ci --command deadnix --fail flake.nix home-manager.nix
+          nix develop .#ci --command statix check .
+      - name: Check workflow syntax
+        run: nix develop .#ci --command actionlint
+      - name: Audit workflow security
+        run: nix develop .#ci --command zizmor --persona pedantic .github/workflows
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Scan repository history for secrets
+        run: nix develop .#ci --command gitleaks git --redact --no-banner

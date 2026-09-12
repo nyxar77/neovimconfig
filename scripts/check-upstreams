@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+metadata_file="${1:?usage: check-upstreams PACKAGE_METADATA_JSON}"
+stale_days="${UPSTREAM_STALE_DAYS:-730}"
+now_epoch="$(date +%s)"
+failed=0
+
+api_headers=(-H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28")
+if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+  api_headers+=(-H "Authorization: Bearer $GITHUB_TOKEN")
+fi
+
+mapfile -t github_repositories < <(
+	jq -r '.[].homepage // empty' "$metadata_file" \
+		| sed -nE 's#^https?://github\.com/([^/]+/[^/#]+)(/.*)?$#\1#p' \
+		| sed 's/\.git$//' \
+		| sort -u
+)
+
+mapfile -t codeberg_repositories < <(
+	jq -r '.[].homepage // empty' "$metadata_file" \
+		| sed -nE 's#^https?://codeberg\.org/([^/]+/[^/#]+)(/.*)?$#\1#p' \
+		| sed 's/\.git$//' \
+		| sort -u
+)
+
+check_status() {
+	local repository="$1"
+	local archived="$2"
+	local disabled="$3"
+	local pushed_at="$4"
+
+	if [[ "$archived" == "true" || "$disabled" == "true" ]]; then
+		printf 'error: upstream repository %s is archived or disabled\n' "$repository" >&2
+		failed=1
+		return
+	fi
+
+	if [[ -n "$pushed_at" ]]; then
+		local pushed_epoch age_days
+		pushed_epoch="$(date -d "$pushed_at" +%s)"
+		age_days="$(( (now_epoch - pushed_epoch) / 86400 ))"
+		if ((age_days > stale_days)); then
+			if [[ -n "${GITHUB_ACTIONS:-}" ]]; then
+				printf '::warning title=Possibly unmaintained dependency::%s has not been pushed to for %s days.\n' "$repository" "$age_days"
+			else
+				printf 'warning: %s has not been pushed to for %s days\n' "$repository" "$age_days" >&2
+			fi
+		fi
+	fi
+}
+
+for repository in "${github_repositories[@]}"; do
+	response="$(curl --retry 3 --retry-all-errors --silent --show-error --fail "${api_headers[@]}" "https://api.github.com/repos/$repository")" || {
+		printf 'warning: could not inspect upstream repository %s\n' "$repository" >&2
+		continue
+	}
+
+	check_status "github.com/$repository" "$(jq -r '.archived' <<<"$response")" "$(jq -r '.disabled' <<<"$response")" "$(jq -r '.pushed_at // empty' <<<"$response")"
+done
+
+for repository in "${codeberg_repositories[@]}"; do
+	response="$(curl --retry 3 --retry-all-errors --silent --show-error --fail "https://codeberg.org/api/v1/repos/$repository")" || {
+		printf 'warning: could not inspect upstream repository %s\n' "$repository" >&2
+		continue
+	}
+
+	check_status "codeberg.org/$repository" "$(jq -r '.archived' <<<"$response")" "false" "$(jq -r '.updated_at // empty' <<<"$response")"
+done
+
+exit "$failed"

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+check_root="$(mktemp -d -t neovimconfig-check.XXXXXXXXXX)"
+nvim_bin="${NVIM_BIN:-nvim}"
+
+cleanup() {
+  rm -rf -- "$check_root"
+}
+trap cleanup EXIT
+
+mkdir -p "$check_root/config" "$check_root/state"
+ln -s "$config_root/nvim" "$check_root/config/nvim"
+
+export NEOVIM_CONFIG_ROOT="$config_root"
+export NVIM_LOG_FILE="$check_root/nvim.log"
+export XDG_CONFIG_HOME="$check_root/config"
+export XDG_STATE_HOME="$check_root/state"
+
+"$nvim_bin" --headless -u NONE -i NONE \
+  "+lua local root = assert(os.getenv('NEOVIM_CONFIG_ROOT')); for _, path in ipairs(vim.fn.glob(root .. '/nvim/**/*.lua', false, true)) do local chunk, err = loadfile(path); if not chunk then error(path .. ': ' .. err) end end" \
+  "+qa"
+
+"$nvim_bin" --headless -i NONE "$config_root/README.md" \
+  "+Cheatsheet" \
+  "+lua assert(vim.api.nvim_buf_get_name(0):match('/doc/cheatsheet%.md$')); assert(vim.bo.readonly); assert(not vim.bo.modifiable); assert(vim.fn.maparg('q', 'n') == '<Cmd>tabclose<CR>')" \
+  "+qa!"
+
+git -C "$config_root" diff --check
+
+printf 'Neovim configuration checks passed.\n'
