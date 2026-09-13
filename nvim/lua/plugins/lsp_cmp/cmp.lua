@@ -1,17 +1,28 @@
 require("lz.n").load({
 	{
-		"LuaSnip",
-		event = "InsertEnter",
-		after = function()
-			require("luasnip.loaders.from_vscode").lazy_load()
-		end,
-	},
-	{
 		"nvim-cmp",
 		priority = 100,
-		lazy = false,
-		load_after = { "LuaSnip" },
+		event = { "InsertEnter", "CmdlineEnter" },
+		before = function()
+			for _, dependency in ipairs({
+				"luasnip",
+				"friendly-snippets",
+				"lspkind.nvim",
+				"cmp-nvim-lsp",
+				"cmp-path",
+				"cmp-buffer",
+				"cmp-cmdline",
+				"cmp_luasnip",
+			}) do
+				vim.cmd.packadd(dependency)
+			end
+		end,
 		after = function()
+			-- cmp sources register from after/plugin, which :packadd does not
+			-- source when it runs after startup.
+			vim.cmd("runtime! after/plugin/cmp_*.lua")
+			require("luasnip.loaders.from_vscode").lazy_load()
+
 			local luasnip = require("luasnip")
 			local cmp = require("cmp")
 			local lspkind = require("lspkind")

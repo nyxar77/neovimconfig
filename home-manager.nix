@@ -1,4 +1,14 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  # Nix plugin dependencies otherwise become start packages even when their
+  # consumer is optional. Lua hooks below load each required dependency.
+  withoutPluginDependencies = plugin: plugin // { dependencies = [ ]; };
+  optionalPlugin = plugin: {
+    plugin = withoutPluginDependencies plugin;
+    optional = true;
+  };
+in
+{
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -9,70 +19,74 @@
     withRuby = false;
 
     plugins = with pkgs.vimPlugins; [
-      nvim-lint
+      # lz.n must be available before init.lua registers optional plugins.
+      lz-n
 
-      telescope-nvim
-      telescope-live-grep-args-nvim
-      plenary-nvim
-      nvim-web-devicons
+      # LSP definitions are read before lazy plugin registration.
+      (withoutPluginDependencies nvim-lspconfig)
 
-      ccc-nvim
-      comment-nvim
-      todo-comments-nvim
-      nvim-ts-context-commentstring
-      cord-nvim
-      indent-blankline-nvim
-      oil-nvim
-      lualine-nvim
-      gitsigns-nvim
-      which-key-nvim
-      snacks-nvim
+      (optionalPlugin plenary-nvim)
+      (optionalPlugin nvim-web-devicons)
+      (optionalPlugin nvim-treesitter-textobjects)
+      (optionalPlugin harpoon-lualine)
+      (optionalPlugin nvim-nio)
+      (optionalPlugin nvim-dap-go)
+      (optionalPlugin telescope-dap-nvim)
+      (optionalPlugin promise-async)
 
-      catppuccin-nvim
-      reactive-nvim
-      nvim-treesitter
-      nvim-treesitter-textobjects
+      (optionalPlugin nvim-lint)
+      (optionalPlugin markview-nvim)
 
-      harpoon2
-      harpoon-lualine
-      # add this package "letieu/harpoon-lualine"
+      (optionalPlugin telescope-nvim)
+      (optionalPlugin telescope-live-grep-args-nvim)
 
-      auto-session
-      toggleterm-nvim
-      undotree
-      url-open
+      (optionalPlugin ccc-nvim)
+      (optionalPlugin comment-nvim)
+      (optionalPlugin todo-comments-nvim)
+      (optionalPlugin nvim-ts-context-commentstring)
+      (optionalPlugin cord-nvim)
+      (optionalPlugin indent-blankline-nvim)
+      (optionalPlugin oil-nvim)
+      (optionalPlugin lualine-nvim)
+      (optionalPlugin gitsigns-nvim)
+      (optionalPlugin which-key-nvim)
+      (optionalPlugin snacks-nvim)
+
+      (optionalPlugin catppuccin-nvim)
+      (optionalPlugin reactive-nvim)
+      (optionalPlugin nvim-treesitter)
+
+      (optionalPlugin harpoon2)
+
+      (optionalPlugin auto-session)
+      (optionalPlugin toggleterm-nvim)
+      (optionalPlugin undotree)
+      (optionalPlugin url-open)
       # vimtex
 
       # lazygit-nvim
 
-      lazydev-nvim
-      SchemaStore-nvim
+      (optionalPlugin lazydev-nvim)
+      (optionalPlugin SchemaStore-nvim)
 
-      nvim-autopairs
-      nvim-cmp # autocompletion
-      cmp-nvim-lsp
-      cmp-path
-      cmp-buffer
-      cmp-cmdline
-      nvim-lspconfig # deprecated
-      luasnip
-      cmp_luasnip
-      friendly-snippets
-      lspkind-nvim
+      (optionalPlugin nvim-autopairs)
+      (optionalPlugin nvim-cmp)
+      (optionalPlugin cmp-nvim-lsp)
+      (optionalPlugin cmp-path)
+      (optionalPlugin cmp-buffer)
+      (optionalPlugin cmp-cmdline)
+      (optionalPlugin luasnip)
+      (optionalPlugin cmp_luasnip)
+      (optionalPlugin friendly-snippets)
+      (optionalPlugin lspkind-nvim)
 
-      conform-nvim # formatters
+      (optionalPlugin conform-nvim)
 
-      nvim-nio # dap
-      nvim-dap
-      nvim-dap-go
-      nvim-dap-ui
-      nvim-dap-virtual-text
-      telescope-dap-nvim
+      (optionalPlugin nvim-dap)
+      (optionalPlugin nvim-dap-ui)
+      (optionalPlugin nvim-dap-virtual-text)
 
-      nvim-ufo # folds
-      promise-async
-
-      lz-n # lazy loading
+      (optionalPlugin nvim-ufo)
     ];
 
     extraPackages = with pkgs; [

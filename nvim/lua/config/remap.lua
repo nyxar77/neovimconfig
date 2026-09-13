@@ -91,6 +91,7 @@ end, { silent = true, desc = "toggle executable mode" })
 
 -- Setup Telescope with the delete buffer function
 vim.keymap.set("n", "<leader>tb", function()
+	require("lz.n").trigger_load("telescope.nvim")
 	local conf = require("telescope.config").values
 	local function make_finder()
 		local paths = {}

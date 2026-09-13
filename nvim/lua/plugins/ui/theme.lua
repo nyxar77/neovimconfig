@@ -3,7 +3,7 @@ require("lz.n").load({
 		"catppuccin-nvim",
 		lazy = false,
 		priority = 100,
-		before = function()
+		after = function()
 			-- HardHacker's terminal colors, expanded into a complete Catppuccin palette.
 			-- The ANSI colors below stay exact; the extra shades only fill editor UI roles.
 			local hardhacker = {
@@ -101,6 +101,8 @@ require("lz.n").load({
 							Pmenu = { fg = colors.subtext1 },
 							PmenuSel = { fg = colors.text, bg = colors.surface1, style = { "bold" } },
 							PmenuMatch = { fg = colors.yellow, style = { "bold" } },
+							DashboardNixLight = { fg = colors.sapphire },
+							DashboardNixDark = { fg = colors.blue },
 
 							-- Keep the syntax varied; red is a signature accent rather than the base language.
 							Identifier = { fg = colors.text },
@@ -155,8 +157,7 @@ require("lz.n").load({
 					which_key = true,
 				},
 			})
-		end,
-		after = function()
+
 			vim.cmd.colorscheme("catppuccin")
 
 			local terminal = {

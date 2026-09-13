@@ -1,13 +1,15 @@
 require("lz.n").load({
 	{
 		"harpoon2",
-		lazy = false,
 		keys = {
 			{ "M", desc = "open harpoon window" },
 			{ "<leader>a", desc = "add file to harpoon list" },
 			{ "Mp", desc = "Switch to previous item" },
 			{ "Mn", desc = "Switch to next item" },
 		},
+		before = function()
+			require("lz.n").trigger_load("telescope.nvim")
+		end,
 		after = function()
 			local indicators
 			if vim.g.keyboardLayout == "azerty" then

@@ -2,6 +2,10 @@ require("lz.n").load({
 	{
 		"lualine.nvim",
 		event = "VimEnter",
+		before = function()
+			vim.cmd.packadd("harpoon-lualine")
+			vim.cmd.packadd("nvim-web-devicons")
+		end,
 		after = function()
 			local indicators
 			local active_indicators
@@ -55,7 +59,7 @@ require("lz.n").load({
 							active_indicators = active_indicators,
 							color_active = { fg = "#ebde76" },
 							_separator = " ",
-							no_harpoon = "Harpoon not loaded",
+							no_harpoon = "",
 						},
 					},
 					lualine_c = {},

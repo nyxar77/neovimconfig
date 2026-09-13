@@ -115,6 +115,15 @@ require("lz.n").load({
 				desc = "Widgets",
 			},
 		},
+		before = function()
+			for _, dependency in ipairs({
+				"nvim-dap-go",
+				"nvim-dap-virtual-text",
+				"telescope-dap.nvim",
+			}) do
+				vim.cmd.packadd(dependency)
+			end
+		end,
 		after = function()
 			local dap = require("dap")
 
@@ -287,6 +296,10 @@ require("lz.n").load({
 				mode = { "n", "x" },
 			},
 		},
+		before = function()
+			require("lz.n").trigger_load("nvim-dap")
+			vim.cmd.packadd("nvim-nio")
+		end,
 		after = function()
 			local dap, dapui = require("dap"), require("dapui")
 			dapui.setup()

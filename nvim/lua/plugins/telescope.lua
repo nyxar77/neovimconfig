@@ -9,6 +9,15 @@ require("lz.n").load({
 			{ "<leader>fd", desc = "Telescope diagnostics" },
 			{ "<leader>fr", desc = "Telescope Live grep w args" },
 		},
+		before = function()
+			for _, dependency in ipairs({
+				"plenary.nvim",
+				"nvim-web-devicons",
+				"telescope-live-grep-args.nvim",
+			}) do
+				vim.cmd.packadd(dependency)
+			end
+		end,
 		after = function()
 			local telescope = require("telescope")
 			local builtin = require("telescope.builtin")

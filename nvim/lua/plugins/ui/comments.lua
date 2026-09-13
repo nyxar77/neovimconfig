@@ -9,9 +9,11 @@ require("lz.n").load({
 		end,
 	},
 	{
-		"Comment.nvim",
+		"comment.nvim",
 		event = "BufReadPost",
-		load_after = { "nvim-ts-context-commentstring" },
+		before = function()
+			require("lz.n").trigger_load("nvim-ts-context-commentstring")
+		end,
 		after = function()
 			require("Comment").setup({
 				pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
@@ -21,6 +23,9 @@ require("lz.n").load({
 	{
 		"todo-comments.nvim",
 		event = "BufReadPost",
+		before = function()
+			vim.cmd.packadd("plenary.nvim")
+		end,
 		after = function()
 			require("todo-comments.config").setup({
 				keywords = {

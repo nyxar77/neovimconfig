@@ -3,6 +3,9 @@ require("lz.n").load({
 		"nvim-treesitter",
 		event = "BufReadPost",
 		lazy = true,
+		before = function()
+			vim.cmd.packadd("nvim-treesitter-textobjects")
+		end,
 		after = function()
 			local treesitter = require("nvim-treesitter")
 			local ensure_installed = {

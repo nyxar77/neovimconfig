@@ -1,7 +1,7 @@
 require("lz.n").load({
 	{
 		"cord.nvim",
-		lazy = true,
+		event = "DeferredUIEnter",
 		after = function()
 			require("cord").setup()
 		end,

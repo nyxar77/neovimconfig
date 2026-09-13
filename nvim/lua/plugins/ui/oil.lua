@@ -18,6 +18,9 @@ require("lz.n").load({
 				desc = "close oil",
 			},
 		},
+		before = function()
+			vim.cmd.packadd("nvim-web-devicons")
+		end,
 		after = function()
 			require("oil").setup({
 				delete_to_trash = true,

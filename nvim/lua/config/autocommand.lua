@@ -62,6 +62,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 vim.api.nvim_create_user_command("Registers", function()
+	require("lz.n").trigger_load("telescope.nvim")
 	require("telescope.builtin").registers({
 		layout_strategy = "vertical",
 		layout_config = {

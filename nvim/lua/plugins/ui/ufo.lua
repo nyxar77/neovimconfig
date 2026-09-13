@@ -2,6 +2,9 @@ require("lz.n").load({
 	{
 		"nvim-ufo",
 		event = "BufReadPost",
+		before = function()
+			vim.cmd.packadd("promise-async")
+		end,
 		after = function()
 			local language_servers = vim.lsp.get_clients()
 			for _, ls in ipairs(language_servers) do

@@ -1,7 +1,7 @@
 require("lz.n").load({
 	{
 		"which-key.nvim",
-		event = "VimEnter",
+		event = "DeferredUIEnter",
 		keys = {
 			{
 				"<leader>?",
@@ -11,6 +11,9 @@ require("lz.n").load({
 				desc = "Buffer Local Keymaps (which-key)",
 			},
 		},
+		before = function()
+			vim.cmd.packadd("nvim-web-devicons")
+		end,
 		after = function()
 			require("which-key").setup({
 				win = {

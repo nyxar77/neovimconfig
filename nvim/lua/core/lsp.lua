@@ -111,7 +111,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local map = function(keys, func, desc)
 			vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 		end
-		local telescope_builtins = require("telescope.builtin")
+		local function telescope(method)
+			return function()
+				require("lz.n").trigger_load("telescope.nvim")
+				require("telescope.builtin")[method]()
+			end
+		end
 
 		map("gl", function()
 			vim.diagnostic.open_float({ border = "rounded" })
@@ -120,14 +125,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		map("K", function()
 			vim.lsp.buf.hover({ border = "rounded" })
 		end, "Hover Documentation")
-		map("gd", telescope_builtins.lsp_definitions, "Goto Definition")
+		map("gd", telescope("lsp_definitions"), "Goto Definition")
 		map("grd", vim.lsp.buf.declaration, "Goto Declaration")
 		map("gra", vim.lsp.buf.code_action, "Code Action")
 		map("grn", vim.lsp.buf.rename, "Rename all references")
-		map("grr", telescope_builtins.lsp_references, "Lsp references")
+		map("grr", telescope("lsp_references"), "Lsp references")
 		map("gri", vim.lsp.buf.implementation, "Lsp implementation")
-		map("gO", telescope_builtins.lsp_document_symbols, "document Symbols")
-		map("grw", telescope_builtins.lsp_workspace_symbols, "workspace Symbols")
+		map("gO", telescope("lsp_document_symbols"), "document Symbols")
+		map("grw", telescope("lsp_workspace_symbols"), "workspace Symbols")
 		map("<leader>v", "<cmd>vsplit | lua vim.lsp.buf.definition()<cr>", "Goto Definition in Vertical Split")
 
 		local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
