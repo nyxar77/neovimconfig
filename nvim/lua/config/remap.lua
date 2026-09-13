@@ -1,58 +1,31 @@
 vim.keymap.set("i", "<C-c>", "<Esc>")
--- clear highlight after search
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
--- create new tab
--- DANGER: disabled
 
 --[[ vim.keymap.set("n", "<leader>tt", "<cmd>tabnew<CR>", { desc = "new tab" })
 vim.keymap.set("n", "<leader>tn", "<cmd>tabnext<CR>", { desc = "next tab" })
 vim.keymap.set("n", "<leader>tp", "<cmd>tabprev<CR>", { desc = "previous tab" }) ]]
 
--- move multiple selected line
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 
 vim.keymap.set("v", ">", ">gv")
 vim.keymap.set("v", "<", "<gv")
 
--- move next line to the cursor line to the end
 vim.keymap.set("n", "J", "mzJ`z")
--- jump forward
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
--- jump backdward
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
--- move to the next search & center it
 vim.keymap.set("n", "n", "nzzzv")
--- move to the previous search & center it
 vim.keymap.set("n", "N", "Nzzzv")
 
---NOTE: unconfigured quick list:
--- paste in visual mode without overwriting the registery
 vim.keymap.set("x", "P", [["_dP]], { desc = "paste in x mode without overwriting the registery" })
 
--- yank to system clipboard
 vim.keymap.set({ "n", "v" }, "Y", '"+y', { desc = "yank to system" })
 
 vim.keymap.set({ "n", "v" }, "D", '"dd', { desc = "del & save to nvim D registery" })
 
---open tmux
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
--- vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "format the buf" })
 
--- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
--- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-
---[[ local function is_loclist_open()
-    for _, win in ipairs(vim.fn.getwininfo()) do
-        if win.loclist == 1 then
-            return true
-        end
-    end
-    return false
-end ]]
-
--- substitute all words under cursor in the current buffer
 vim.keymap.set(
 	"n",
 	"<leader>s",
@@ -60,12 +33,6 @@ vim.keymap.set(
 	{ desc = "substitute under cursor" }
 )
 
--- format code
---[[ vim.keymap.set({ "n" }, "<leader>ff", function()
-	require("conform").format({ lsp_fallback = true, async = true })
-end, { desc = "format the buf" }) ]]
-
--- toggle file executable status
 vim.keymap.set("n", "<leader>x", function()
 	local file = vim.fn.expand("%")
 	if file == "" then
@@ -75,7 +42,6 @@ vim.keymap.set("n", "<leader>x", function()
 
 	if vim.bo.filetype ~= "oil" then
 		local is_executable = vim.fn.getftype(file) == "file" and vim.fn.executable(file) == 1
-		-- if true remove executable, false make executable
 		local action = is_executable and "remove executable" or "make executable"
 		local answer = vim.fn.input("Do you want to " .. action .. "? (y/n): ")
 		if answer:lower() == "y" then
@@ -89,7 +55,6 @@ vim.keymap.set("n", "<leader>x", function()
 	end
 end, { silent = true, desc = "toggle executable mode" })
 
--- Setup Telescope with the delete buffer function
 vim.keymap.set("n", "<leader>tb", function()
 	require("lz.n").trigger_load("telescope.nvim")
 	local conf = require("telescope.config").values
@@ -138,7 +103,6 @@ vim.keymap.set("n", "<leader>tb", function()
 					["<Esc>"] = function(prompt_buffer_number)
 						local state = require("telescope.actions.state")
 						local current_picker = state.get_current_picker(prompt_buffer_number)
-						-- Close the picker
 						require("telescope.actions").close(prompt_buffer_number)
 						current_picker:refresh(make_finder())
 					end,

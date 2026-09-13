@@ -1,5 +1,3 @@
--- The packaged configuration starts nvim-treesitter. The guarded packadd also
--- lets repository checks run against an older, still-activated generation.
 pcall(vim.cmd.packadd, "nvim-treesitter")
 vim.cmd.packadd("nvim-treesitter-textobjects")
 

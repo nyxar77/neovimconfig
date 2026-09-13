@@ -1,21 +1,3 @@
---[[ vim.lsp.config("*", {
-	capabilities = {
-		textDocument = {
-			semanticTokens = {
-				multilineTokenSupport = true,
-			},
-		},
-	},
-	root_markers = { ".git", "flake.nix" },
-}) ]]
-
---[[ vim.filetype.add({
-	pattern = {
-		["docker%-compose%.ya?ml"] = "yaml.docker-compose",
-		["compose%.ya?ml"] = "yaml.docker-compose",
-	},
-}) ]]
-
 local servers = {
 	"docker_language_server",
 	-- "clangd", -- clang-tools adds an ~800 MiB closure; enable when needed.
@@ -51,9 +33,6 @@ local servers = {
 	"rust_analyzer",
 }
 
--- Apply repository-owned overrides after nvim-lspconfig's defaults.
--- Runtime-path discovery does not guarantee that a same-named lsp/*.lua file
--- wins over the packaged default.
 for _, server in ipairs(servers) do
 	local override = vim.fn.stdpath("config") .. "/lsp/" .. server .. ".lua"
 	if vim.fn.filereadable(override) == 1 then
@@ -148,36 +127,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
 
-		-- When cursor stops moving: Highlights all instances of the symbol under the cursor
-		-- When cursor moves: Clears the highlighting
-		--[[ vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-			buffer = event.buf,
-			group = highlight_augroup,
-			callback = function()
-				local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
-
-				for _, client in ipairs(clients) do
-					if client.name ~= "asm-lsp" then
-						vim.lsp.buf.document_highlight()
-					end
-				end
-			end,
-		}) ]]
-
-		--[[ vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-			buffer = event.buf,
-			group = highlight_augroup,
-			callback = vim.lsp.buf.document_highlight,
-		})
-		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-			buffer = event.buf,
-			group = highlight_augroup,
-			callback = vim.lsp.buf.clear_references,
-		}) ]]
 	end,
 })
 
--- Debounce helper
 local function debounce(fn, ms)
 	local timer_id = nil
 	return function(...)
@@ -195,13 +147,11 @@ local function debounce(fn, ms)
 	end
 end
 
--- Setup LSP highlights once per buffer
 local lsp_document_highlight_group = vim.api.nvim_create_augroup("LspDocumentHighlight", { clear = true })
 
 local function setup_highlight(bufnr)
 	vim.api.nvim_clear_autocmds({ group = lsp_document_highlight_group, buffer = bufnr })
 
-	-- Debounced document highlight
 	vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 		buffer = bufnr,
 		group = lsp_document_highlight_group,
@@ -219,7 +169,6 @@ local function setup_highlight(bufnr)
 	})
 end
 
--- Call it on LSP attach
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
@@ -231,7 +180,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
--- When LSP detaches: Clears the highlighting
 vim.api.nvim_create_autocmd("LspDetach", {
 	group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
 	callback = function(event2)

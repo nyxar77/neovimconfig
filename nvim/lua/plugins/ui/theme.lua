@@ -4,8 +4,6 @@ require("lz.n").load({
 		lazy = false,
 		priority = 100,
 		after = function()
-			-- A low-strain palette grown from Catppuccin and HardHacker. The cool
-			-- colors are deliberately softer than either source to avoid neon glare.
 			local hardhacker = {
 				rosewater = "#f2e8f0",
 				flamingo = "#f0a6c9",
@@ -46,8 +44,6 @@ require("lz.n").load({
 					solid = true,
 				},
 
-				-- Catppuccin maps ANSI black to an editor overlay color. We apply the
-				-- real terminal palette after loading instead, so :terminal matches Kitty.
 				term_colors = false,
 				dim_inactive = { enabled = false },
 				styles = {
@@ -103,14 +99,12 @@ require("lz.n").load({
 							PmenuSel = { fg = colors.text, bg = colors.surface1, style = { "bold" } },
 							PmenuMatch = { fg = colors.yellow, style = { "bold" } },
 							DashboardWordmarkLeft = { fg = colors.blue, style = { "bold" } },
-							-- NixOS 20.09 colors: bright tips transition toward the central hub.
 							DashboardNixCyan = { fg = "#51b4eb" },
 							DashboardNixCyanInner = { fg = "#6a70f7" },
 							DashboardNixPurple = { fg = "#cbabfb" },
 							DashboardNixPurpleInner = { fg = "#9074f1" },
 							DashboardWordmarkRight = { fg = colors.green, style = { "bold" } },
 
-							-- Keep the syntax varied; red is a signature accent rather than the base language.
 							Identifier = { fg = colors.text },
 							Function = { fg = colors.blue, style = { "bold" } },
 							Statement = { fg = colors.mauve },
@@ -142,8 +136,6 @@ require("lz.n").load({
 							["@type.builtin"] = { fg = colors.sky, style = { "bold" } },
 							["@constructor"] = { fg = colors.sky },
 
-							-- Nix is attribute-heavy: callees are blue, passed values stay neutral,
-							-- members are lavender, and function parameters share one color.
 							["@variable.nix"] = { fg = colors.text },
 							["@variable.member.nix"] = { fg = colors.lavender },
 							["@variable.parameter.nix"] = { fg = colors.subtext1 },
@@ -162,7 +154,6 @@ require("lz.n").load({
 					end,
 				},
 
-				-- Auto-detection only supports a few package managers, not this Nix/lz.n setup.
 				default_integrations = false,
 				auto_integrations = false,
 				integrations = {

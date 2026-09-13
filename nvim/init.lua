@@ -1,6 +1,5 @@
 vim.loader.enable()
 
--- This config does not use remote plugins, and Oil replaces netrw.
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
@@ -15,5 +14,4 @@ require("config.remap")
 require("config.autocommand")
 require("core.lz_stats").setup()
 require("plugins")
--- Register filetype-loaded helpers such as LazyDev before LSP startup hooks.
 require("core.lsp")

@@ -11,8 +11,6 @@ require("lz.n").load({
 				end
 			end
 
-			-- Replace the O with a six-row Nix snowflake so the whole header has
-			-- one fixed height and never needs a responsive layout mode.
 			local nix_mark = {
 				{
 					{ "   " },
