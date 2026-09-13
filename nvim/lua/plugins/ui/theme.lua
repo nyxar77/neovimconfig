@@ -101,8 +101,13 @@ require("lz.n").load({
 							Pmenu = { fg = colors.subtext1 },
 							PmenuSel = { fg = colors.text, bg = colors.surface1, style = { "bold" } },
 							PmenuMatch = { fg = colors.yellow, style = { "bold" } },
-							DashboardNixLight = { fg = colors.sapphire },
-							DashboardNixDark = { fg = colors.blue },
+							DashboardWordmarkLeft = { fg = colors.blue, style = { "bold" } },
+							-- NixOS 20.09 colors: bright tips transition toward the central hub.
+							DashboardNixCyan = { fg = "#51b4eb" },
+							DashboardNixCyanInner = { fg = "#6a70f7" },
+							DashboardNixPurple = { fg = "#cbabfb" },
+							DashboardNixPurpleInner = { fg = "#9074f1" },
+							DashboardWordmarkRight = { fg = colors.green, style = { "bold" } },
 
 							-- Keep the syntax varied; red is a signature accent rather than the base language.
 							Identifier = { fg = colors.text },

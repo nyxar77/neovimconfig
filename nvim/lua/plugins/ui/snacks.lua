@@ -16,48 +16,48 @@ require("lz.n").load({
 			local nix_mark = {
 				{
 					{ "   " },
-					{ "██", hl = "DashboardNixLight" },
+					{ "██", hl = "DashboardNixPurple" },
 					{ " " },
-					{ "▄█▄▄█", hl = "DashboardNixLight" },
+					{ "▄█▄▄█", hl = "DashboardNixCyan" },
 					{ "   " },
 				},
 				{
 					{ " " },
-					{ "▄██", hl = "DashboardNixLight" },
-					{ "██", hl = "DashboardNixDark" },
-					{ "████▀▄▄", hl = "DashboardNixLight" },
+					{ "▄██", hl = "DashboardNixPurple" },
+					{ "██", hl = "DashboardNixPurpleInner" },
+					{ "████", hl = "DashboardNixCyanInner" },
+					{ "▀▄▄", hl = "DashboardNixCyan" },
 					{ " " },
 				},
 				{
-					{ "▄▄▄██▀", hl = "DashboardNixLight" },
+					{ "▄▄▄", hl = "DashboardNixCyan" },
+					{ "██▀", hl = "DashboardNixCyanInner" },
 					{ "  " },
-					{ "▀█", hl = "DashboardNixLight" },
-					{ "██", hl = "DashboardNixDark" },
-					{ "█▄", hl = "DashboardNixLight" },
+					{ "▀██", hl = "DashboardNixPurpleInner" },
+					{ "██▄", hl = "DashboardNixPurple" },
 				},
 				{
-					{ "▀███", hl = "DashboardNixLight" },
-					{ "█", hl = "DashboardNixDark" },
-					{ "▄", hl = "DashboardNixLight" },
+					{ "▀██", hl = "DashboardNixCyan" },
+					{ "██▄", hl = "DashboardNixCyanInner" },
 					{ "  " },
-					{ "▄", hl = "DashboardNixLight" },
-					{ "██", hl = "DashboardNixDark" },
-					{ "▀▀▀", hl = "DashboardNixLight" },
+					{ "▄██", hl = "DashboardNixPurpleInner" },
+					{ "▀▀▀", hl = "DashboardNixPurple" },
 				},
 				{
 					{ " " },
-					{ "▀▀▄", hl = "DashboardNixLight" },
-					{ "██", hl = "DashboardNixDark" },
-					{ "██████▀", hl = "DashboardNixLight" },
+					{ "▀▀▄", hl = "DashboardNixPurple" },
+					{ "██", hl = "DashboardNixPurpleInner" },
+					{ "████", hl = "DashboardNixCyanInner" },
+					{ "██▀", hl = "DashboardNixCyan" },
 					{ " " },
 				},
 				{
 					{ "   " },
-					{ "██▀", hl = "DashboardNixLight" },
-					{ "█", hl = "DashboardNixDark" },
-					{ "█", hl = "DashboardNixLight" },
+					{ "██▀", hl = "DashboardNixPurple" },
+					{ "█", hl = "DashboardNixPurpleInner" },
+					{ "█", hl = "DashboardNixCyanInner" },
 					{ " " },
-					{ "▀█", hl = "DashboardNixLight" },
+					{ "▀█", hl = "DashboardNixCyan" },
 					{ "   " },
 				},
 			}
@@ -100,11 +100,11 @@ require("lz.n").load({
 				for index, wordmark in ipairs(neovim_wordmark) do
 					local ne_padding = ne_width - vim.api.nvim_strwidth(wordmark[1])
 					local vim_padding = vim_width - vim.api.nvim_strwidth(wordmark[2])
-					text[#text + 1] = { wordmark[1] .. (" "):rep(ne_padding + 1), hl = "String" }
+					text[#text + 1] = { wordmark[1] .. (" "):rep(ne_padding + 1), hl = "DashboardWordmarkLeft" }
 					for _, part in ipairs(nix_mark[index]) do
 						text[#text + 1] = part
 					end
-					text[#text + 1] = { " " .. wordmark[2] .. (" "):rep(vim_padding), hl = "Function" }
+					text[#text + 1] = { " " .. wordmark[2] .. (" "):rep(vim_padding), hl = "DashboardWordmarkRight" }
 					if index < #neovim_wordmark then
 						text[#text + 1] = { "\n" }
 					end
