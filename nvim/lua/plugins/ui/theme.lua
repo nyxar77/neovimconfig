@@ -4,8 +4,8 @@ require("lz.n").load({
 		lazy = false,
 		priority = 100,
 		after = function()
-			-- HardHacker's terminal colors, expanded into a complete Catppuccin palette.
-			-- The ANSI colors below stay exact; the extra shades only fill editor UI roles.
+			-- A low-strain palette grown from Catppuccin and HardHacker. The cool
+			-- colors are deliberately softer than either source to avoid neon glare.
 			local hardhacker = {
 				rosewater = "#f2e8f0",
 				flamingo = "#f0a6c9",
@@ -16,9 +16,9 @@ require("lz.n").load({
 				peach = "#ebde76",
 				yellow = "#ebde76",
 				green = "#b1f2a7",
-				teal = "#9ce7d2",
-				sky = "#b3f4f3",
-				sapphire = "#8ed8ec",
+				teal = "#9bcfc3",
+				sky = "#add8d8",
+				sapphire = "#9fc4d8",
 				blue = "#b1baf4",
 				lavender = "#cbc8ff",
 
@@ -93,6 +93,7 @@ require("lz.n").load({
 							TermCursor = { fg = colors.mantle, bg = colors.red },
 							LineNr = { fg = colors.overlay2 },
 							CursorLineNr = { fg = colors.yellow, style = { "bold" } },
+							DiagnosticUnnecessary = { fg = colors.overlay0, style = { "italic" } },
 							EndOfBuffer = { fg = colors.surface0 },
 							FloatBorder = { fg = colors.surface2 },
 							FloatTitle = { fg = colors.mantle, bg = colors.pink, style = { "bold" } },
@@ -120,6 +121,8 @@ require("lz.n").load({
 							Include = { fg = colors.pink, style = { "italic" } },
 							Operator = { fg = colors.text },
 							Constant = { fg = colors.yellow },
+							String = { fg = colors.green },
+							Character = { fg = colors.green },
 							Number = { fg = colors.yellow },
 							Boolean = { fg = colors.yellow, style = { "bold" } },
 							Type = { fg = colors.sky, style = { "bold" } },
@@ -137,7 +140,24 @@ require("lz.n").load({
 							["@keyword.exception"] = { fg = colors.red, style = { "italic" } },
 							["@constant.builtin"] = { fg = colors.yellow, style = { "bold" } },
 							["@type.builtin"] = { fg = colors.sky, style = { "bold" } },
-							["@constructor"] = { fg = colors.yellow },
+							["@constructor"] = { fg = colors.sky },
+
+							-- Nix is attribute-heavy: callees are blue, passed values stay neutral,
+							-- members are lavender, and function parameters share one color.
+							["@variable.nix"] = { fg = colors.text },
+							["@variable.member.nix"] = { fg = colors.lavender },
+							["@variable.parameter.nix"] = { fg = colors.subtext1 },
+							["@variable.parameter.builtin.nix"] = { fg = colors.yellow, style = { "bold" } },
+							["@function.nix"] = { fg = colors.mauve, style = { "bold" } },
+							["@keyword.import.nix"] = { fg = colors.pink, style = { "italic" } },
+							["@function.call.nix"] = { fg = colors.blue, style = { "bold" } },
+							["@function.builtin.nix"] = { fg = colors.yellow, style = { "bold" } },
+							["@constant.builtin.nix"] = { fg = colors.yellow, style = { "bold" } },
+							["@operator.nix"] = { fg = colors.sky },
+							["@keyword.operator.nix"] = { fg = colors.sky },
+							["@string.special.path.nix"] = { fg = colors.yellow },
+							["@punctuation.bracket.nix"] = { fg = colors.overlay2 },
+							["@punctuation.delimiter.nix"] = { fg = colors.overlay1 },
 						}
 					end,
 				},
@@ -172,7 +192,7 @@ require("lz.n").load({
 				"#ebde76",
 				"#b1baf4",
 				"#e192ef",
-				"#b3f4f3",
+				"#add8d8",
 				"#eee9fc",
 				"#938aad",
 				"#e965a5",
@@ -180,7 +200,7 @@ require("lz.n").load({
 				"#ebde76",
 				"#b1baf4",
 				"#e192ef",
-				"#b3f4f3",
+				"#add8d8",
 				"#eee9fc",
 			}
 
