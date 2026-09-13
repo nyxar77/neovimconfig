@@ -30,14 +30,17 @@ jobs:
       - name: Test the repository configuration
         run: |
           nvim_path="$(nix build .#neovim --no-link --print-out-paths)"
+          plugin_pack="$(nix build .#plugin-pack --no-link --print-out-paths)"
           NVIM_BIN="$nvim_path/bin/nvim" \
+            NVIM_PLUGIN_PACK="$plugin_pack" \
             NVIM_CHECK_LSP_ATTACH=1 \
             NVIM_CHECK_SERVER_BINARIES=1 \
             ./scripts/check
       - name: Check startup performance
         run: |
           nvim_path="$(nix build .#neovim --no-link --print-out-paths)"
-          NVIM_BIN="$nvim_path/bin/nvim" ./scripts/benchmark
+          plugin_pack="$(nix build .#plugin-pack --no-link --print-out-paths)"
+          NVIM_BIN="$nvim_path/bin/nvim" NVIM_PLUGIN_PACK="$plugin_pack" ./scripts/benchmark
 
   quality-and-security:
     name: Quality and security

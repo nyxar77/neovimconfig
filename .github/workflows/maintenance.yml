@@ -53,7 +53,9 @@ jobs:
       - name: Test Neovim against the latest revisions
         run: |
           nvim_path="$(nix build .#neovim --no-link --print-out-paths)"
+          plugin_pack="$(nix build .#plugin-pack --no-link --print-out-paths)"
           NVIM_BIN="$nvim_path/bin/nvim" \
+            NVIM_PLUGIN_PACK="$plugin_pack" \
             NVIM_CHECK_LSP_ATTACH=1 \
             NVIM_CHECK_SERVER_BINARIES=1 \
             ./scripts/check

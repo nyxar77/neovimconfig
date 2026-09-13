@@ -4,20 +4,28 @@ set -euo pipefail
 config_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 check_root="$(mktemp -d -t neovimconfig-check.XXXXXXXXXX)"
 nvim_bin="${NVIM_BIN:-nvim}"
+plugin_pack="${NVIM_PLUGIN_PACK:-${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/pack/hm}"
 
 cleanup() {
   rm -rf -- "$check_root"
 }
 trap cleanup EXIT
 
-mkdir -p "$check_root/cache" "$check_root/config" "$check_root/state"
+if [[ ! -d "$plugin_pack" ]]; then
+  printf 'error: Neovim plugin pack not found: %s\n' "$plugin_pack" >&2
+  exit 1
+fi
+
+mkdir -p "$check_root/cache" "$check_root/config" "$check_root/data/nvim/site/pack" "$check_root/state"
 ln -s "$config_root/nvim" "$check_root/config/nvim"
+ln -s "$plugin_pack" "$check_root/data/nvim/site/pack/hm"
 
 export NEOVIM_CONFIG_ROOT="$config_root"
 export NEOVIM_CHECK_ROOT="$check_root"
 export NVIM_LOG_FILE="$check_root/nvim.log"
 export XDG_CACHE_HOME="$check_root/cache"
 export XDG_CONFIG_HOME="$check_root/config"
+export XDG_DATA_HOME="$check_root/data"
 export XDG_STATE_HOME="$check_root/state"
 
 "$nvim_bin" --headless -u NONE -i NONE \

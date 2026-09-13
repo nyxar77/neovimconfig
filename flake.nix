@@ -116,6 +116,15 @@
       packages = forAllSystems (system: {
         default = ciHomes.${system}.config.programs.neovim.finalPackage;
         neovim = ciHomes.${system}.config.programs.neovim.finalPackage;
+        plugin-pack =
+          let
+            source = ciHomes.${system}.config.xdg.dataFile."nvim/site/pack/hm".source;
+          in
+          pkgsFor.${system}.runCommand "neovim-plugin-pack" { } ''
+            mkdir -p "$out"
+            ln -s ${source}/start "$out/start"
+            ln -s ${source}/opt "$out/opt"
+          '';
         home-activation = ciHomes.${system}.activationPackage;
         package-metadata = packageHealthCheck system;
       });
