@@ -5,8 +5,11 @@ config_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 benchmark_root="$(mktemp -d -t neovimconfig-benchmark.XXXXXXXXXX)"
 nvim_bin="${NVIM_BIN:-nvim}"
 runs="${NVIM_BENCHMARK_RUNS:-10}"
-warning_ms="${NVIM_STARTUP_WARNING_MS:-750}"
-failure_ms="${NVIM_STARTUP_FAILURE_MS:-2000}"
+baseline_ms="${NVIM_STARTUP_BASELINE_MS:-500}"
+warning_percent="${NVIM_STARTUP_WARNING_PERCENT:-20}"
+failure_percent="${NVIM_STARTUP_FAILURE_PERCENT:-50}"
+warning_ms="$(awk -v baseline="$baseline_ms" -v percent="$warning_percent" 'BEGIN { printf "%.3f", baseline * (100 + percent) / 100 }')"
+failure_ms="$(awk -v baseline="$baseline_ms" -v percent="$failure_percent" 'BEGIN { printf "%.3f", baseline * (100 + percent) / 100 }')"
 
 cleanup() {
   rm -rf -- "$benchmark_root"
@@ -36,26 +39,31 @@ fi
 median_ms="$(sort -n "$times_file" | awk '{ values[NR] = $1 } END { if (NR % 2) print values[(NR + 1) / 2]; else printf "%.3f", (values[NR / 2] + values[NR / 2 + 1]) / 2 }')"
 maximum_ms="$(sort -n "$times_file" | tail -n 1)"
 
-printf 'Neovim startup: median=%sms maximum=%sms runs=%s\n' "$median_ms" "$maximum_ms" "$runs"
+printf 'Neovim startup: median=%sms maximum=%sms runs=%s baseline=%sms\n' \
+  "$median_ms" "$maximum_ms" "$runs" "$baseline_ms"
 
 if awk -v measured="$median_ms" -v threshold="$failure_ms" 'BEGIN { exit !(measured > threshold) }'; then
-  printf 'error: median startup time %sms exceeds the %sms failure threshold\n' "$median_ms" "$failure_ms" >&2
+  printf 'error: median startup time %sms exceeds the %s%% regression limit (%sms)\n' \
+    "$median_ms" "$failure_percent" "$failure_ms" >&2
   exit 1
 fi
 
 if awk -v measured="$median_ms" -v threshold="$warning_ms" 'BEGIN { exit !(measured > threshold) }'; then
   if [[ -n "${GITHUB_ACTIONS:-}" ]]; then
-    printf '::warning title=Neovim startup regression::Median startup time is %sms; warning threshold is %sms.\n' "$median_ms" "$warning_ms"
+    printf '::warning title=Neovim startup regression::Median startup time is %sms; warning limit is %s%% above the %sms baseline.\n' \
+      "$median_ms" "$warning_percent" "$baseline_ms"
   else
-    printf 'warning: median startup time %sms exceeds the %sms warning threshold\n' "$median_ms" "$warning_ms" >&2
+    printf 'warning: median startup time %sms is more than %s%% above the %sms baseline\n' \
+      "$median_ms" "$warning_percent" "$baseline_ms" >&2
   fi
 fi
 
 if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
   {
     printf '### Neovim startup performance\n\n'
-    printf '| Median | Maximum | Runs | Warning | Failure |\n'
-    printf '|---:|---:|---:|---:|---:|\n'
-    printf '| %sms | %sms | %s | %sms | %sms |\n' "$median_ms" "$maximum_ms" "$runs" "$warning_ms" "$failure_ms"
+    printf '| Median | Maximum | Runs | Baseline | Warning | Failure |\n'
+    printf '|---:|---:|---:|---:|---:|---:|\n'
+    printf '| %sms | %sms | %s | %sms | +%s%% | +%s%% |\n' \
+      "$median_ms" "$maximum_ms" "$runs" "$baseline_ms" "$warning_percent" "$failure_percent"
   } >>"$GITHUB_STEP_SUMMARY"
 fi
