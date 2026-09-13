@@ -10,11 +10,12 @@ cleanup() {
 }
 trap cleanup EXIT
 
-mkdir -p "$check_root/config" "$check_root/state"
+mkdir -p "$check_root/cache" "$check_root/config" "$check_root/state"
 ln -s "$config_root/nvim" "$check_root/config/nvim"
 
 export NEOVIM_CONFIG_ROOT="$config_root"
 export NVIM_LOG_FILE="$check_root/nvim.log"
+export XDG_CACHE_HOME="$check_root/cache"
 export XDG_CONFIG_HOME="$check_root/config"
 export XDG_STATE_HOME="$check_root/state"
 

@@ -13,10 +13,11 @@ cleanup() {
 }
 trap cleanup EXIT
 
-mkdir -p "$benchmark_root/config" "$benchmark_root/state"
+mkdir -p "$benchmark_root/cache" "$benchmark_root/config" "$benchmark_root/state"
 ln -s "$config_root/nvim" "$benchmark_root/config/nvim"
 
 export NVIM_LOG_FILE="$benchmark_root/nvim.log"
+export XDG_CACHE_HOME="$benchmark_root/cache"
 export XDG_CONFIG_HOME="$benchmark_root/config"
 export XDG_STATE_HOME="$benchmark_root/state"
 
