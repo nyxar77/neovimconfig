@@ -16,12 +16,12 @@
 	},
 }) ]]
 
-vim.lsp.enable({
+local servers = {
 	"docker_language_server",
-	"clangd",
+	-- "clangd", -- clang-tools adds an ~800 MiB closure; enable when needed.
 	"neocmake",
 	"gopls",
-	"emmylua_ls",
+	"lua_ls",
 	"nixd",
 	"intelephense",
 	"luau_lsp",
@@ -29,7 +29,6 @@ vim.lsp.enable({
 	"ts_ls",
 	"biome_ls",
 	"cssls",
-	"cssmodules_ls",
 	"css_variables",
 	"tailwindcss",
 	"jsonls",
@@ -50,7 +49,19 @@ vim.lsp.enable({
 	"texlab",
 	"tinymist",
 	"rust_analyzer",
-})
+}
+
+-- Apply repository-owned overrides after nvim-lspconfig's defaults.
+-- Runtime-path discovery does not guarantee that a same-named lsp/*.lua file
+-- wins over the packaged default.
+for _, server in ipairs(servers) do
+	local override = vim.fn.stdpath("config") .. "/lsp/" .. server .. ".lua"
+	if vim.fn.filereadable(override) == 1 then
+		vim.lsp.config(server, dofile(override))
+	end
+end
+
+vim.lsp.enable(servers)
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
@@ -228,3 +239,5 @@ vim.api.nvim_create_autocmd("LspDetach", {
 		vim.api.nvim_clear_autocmds({ group = lsp_document_highlight_group, buffer = event2.buf })
 	end,
 })
+
+return { servers = servers }

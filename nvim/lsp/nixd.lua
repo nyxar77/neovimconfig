@@ -4,7 +4,6 @@ return {
 	cmd = {
 		"nixd",
 		"--inlay-hints=true",
-		"--semantic-tokens=true",
 	},
 
 	filetypes = { "nix" },
@@ -13,6 +12,13 @@ return {
 		"flake.nix",
 		".git",
 	},
+
+	-- nixd's token classes currently collapse keys and function definitions
+	-- into `method`, and parameters into `regexp`. Tree-sitter provides the
+	-- more useful syntax hierarchy; all other nixd features remain enabled.
+	on_init = function(client)
+		client.server_capabilities.semanticTokensProvider = nil
+	end,
 
 	settings = {
 		nixd = {

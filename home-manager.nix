@@ -54,7 +54,54 @@ in
 
       (optionalPlugin catppuccin-nvim)
       (optionalPlugin reactive-nvim)
-      (optionalPlugin nvim-treesitter)
+      (nvim-treesitter.withPlugins (
+        parsers: with parsers; [
+          asm
+          bash
+          blade
+          c
+          cpp
+          css
+          desktop
+          diff
+          dockerfile
+          fish
+          git_config
+          git_rebase
+          gitattributes
+          gitcommit
+          gitignore
+          go
+          graphql
+          html
+          hyprlang
+          ini
+          java
+          javascript
+          json
+          latex
+          lua
+          luau
+          markdown
+          markdown_inline
+          nginx
+          nix
+          php
+          python
+          rasi
+          rust
+          scss
+          solidity
+          toml
+          tsx
+          typescript
+          typst
+          xml
+          yaml
+          yuck
+          zig
+        ]
+      ))
 
       (optionalPlugin harpoon2)
 
@@ -108,9 +155,6 @@ in
       # Lua
       lua-language-server
       stylua
-      emmylua-ls
-      emmylua-check
-      emmylua-doc-cli
 
       # Bash
       bash-language-server
@@ -122,6 +166,8 @@ in
       emmet-language-server
       tailwindcss-language-server
       biome
+      css-variables-language-server
+      graphql-language-service-cli
 
       # JSON/YAML
       yaml-language-server
@@ -134,7 +180,12 @@ in
       isort
 
       # Go
+      go
       gopls
+
+      # C / CMake
+      # clang-tools # ~800 MiB; enable together with clangd in core/lsp.lua.
+      neocmakelsp
 
       # Debug adapters (enable when needed)
       # delve
@@ -142,17 +193,7 @@ in
       # (python3.withPackages (pythonPackages: [ pythonPackages.debugpy ]))
 
       # Rust
-      /*
-           (inputs.fenix.packages.x86_64-linux.stable.withComponents [
-          "rustc"
-          "cargo"
-          "clippy"
-          "rustfmt"
-          "rust-src"
-        ])
-        inputs.fenix.packages.x86_64-linux.stable.rust-analyzer
-        pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter
-      */
+      rust-analyzer
 
       # PHP
       intelephense
@@ -160,8 +201,18 @@ in
       # Java
       jdt-language-server
 
+      # Docker / Helm / Nginx
+      docker-language-server
+      helm-ls
+      nginx-language-server
+
       # SQL
       sqls
+
+      # Assembly / Luau / Solidity
+      asm-lsp
+      luau-lsp
+      vscode-solidity-server
 
       # Markdown / Typst / LaTeX
       marksman
@@ -181,4 +232,5 @@ in
     source = ./nvim;
     recursive = true;
   };
+
 }
