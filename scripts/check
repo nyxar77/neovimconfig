@@ -14,6 +14,7 @@ mkdir -p "$check_root/cache" "$check_root/config" "$check_root/state"
 ln -s "$config_root/nvim" "$check_root/config/nvim"
 
 export NEOVIM_CONFIG_ROOT="$config_root"
+export NEOVIM_CHECK_ROOT="$check_root"
 export NVIM_LOG_FILE="$check_root/nvim.log"
 export XDG_CACHE_HOME="$check_root/cache"
 export XDG_CONFIG_HOME="$check_root/config"
@@ -27,6 +28,12 @@ export XDG_STATE_HOME="$check_root/state"
   "+Cheatsheet" \
   "+lua assert(vim.api.nvim_buf_get_name(0):match('/doc/cheatsheet%.md$')); assert(vim.bo.readonly); assert(not vim.bo.modifiable); assert(vim.fn.maparg('q', 'n') == '<Cmd>tabclose<CR>')" \
   "+qa!"
+
+"$nvim_bin" --headless -i NONE \
+	"+lua vim.g.neovim_runtime_check_passed = false" \
+	"+luafile $config_root/scripts/runtime-check.lua" \
+	"+lua if not vim.g.neovim_runtime_check_passed then vim.cmd.cquit() end" \
+	"+qa!"
 
 git -C "$config_root" diff --check
 

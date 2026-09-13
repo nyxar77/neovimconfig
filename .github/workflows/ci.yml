@@ -30,7 +30,10 @@ jobs:
       - name: Test the repository configuration
         run: |
           nvim_path="$(nix build .#neovim --no-link --print-out-paths)"
-          NVIM_BIN="$nvim_path/bin/nvim" ./scripts/check
+          NVIM_BIN="$nvim_path/bin/nvim" \
+            NVIM_CHECK_LSP_ATTACH=1 \
+            NVIM_CHECK_SERVER_BINARIES=1 \
+            ./scripts/check
       - name: Check startup performance
         run: |
           nvim_path="$(nix build .#neovim --no-link --print-out-paths)"
