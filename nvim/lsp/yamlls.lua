@@ -1,3 +1,5 @@
+local eden_schema = vim.uri_from_fname(vim.fn.expand("~/Programming/projects/Eden/schemas/eden-pipeline.json"))
+
 ---@type vim.lsp.Config
 return {
 	cmd = "yaml-language-server",
@@ -34,7 +36,8 @@ return {
 				["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
 				["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
 				["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/all.json"] = "*.k8s.{yml,yaml}",
-				["https://raw.githubusercontent.com/Nibiru-Consulting/Eden/refs/heads/main/schemas/eden-pipeline.json?token=GHSAT0AAAAAAECAHK7RG326UFOLDXLHZNNM2U24HYA"] = "*.ed.{yml,yaml}",
+				[eden_schema] = "*.ed.{yml,yaml}",
+				-- ["https://raw.githubusercontent.com/Nibiru-Consulting/Eden/refs/heads/main/schemas/eden-pipeline.json?token=GHSAT0AAAAAAECAHK7RXU6PDAY57UCCVASU2VJAF7A"] = "*.ed.{yml,yaml}",
 			},
 			format = { enable = true },
 			completion = true,
