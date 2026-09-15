@@ -2,7 +2,8 @@ local eden_schema = vim.uri_from_fname(vim.fn.expand("~/Programming/projects/Ede
 
 ---@type vim.lsp.Config
 return {
-	cmd = "yaml-language-server",
+	cmd = { "yaml-language-server", "--stdio" },
+
 	filetypes = { "yaml", "yaml.docker-compose", "yaml.gitlab", "yaml.helm-values" },
 	root_markers = {
 		".git",
