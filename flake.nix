@@ -1,6 +1,13 @@
 {
   description = "Nyxar Neovim configuration";
 
+  nixConfig = {
+    extra-substituters = [ "https://nyxar77-neovim-cache.cachix.org" ];
+    extra-trusted-public-keys = [
+      "nyxar77-neovim-cache.cachix.org-1:1sxj9ehb2mc8vzxk36ujudjb6rhmp2ignbyanlxi/ks="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
