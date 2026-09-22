@@ -24,6 +24,11 @@ jobs:
           persist-credentials: false
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
+      - name: Configure Cachix
+        uses: cachix/cachix-action@v17 # zizmor: ignore[unpinned-uses] track Cachix releases
+        with:
+          name: nyxar77-neovim-cache
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build package metadata
         id: metadata
         run: |
@@ -46,6 +51,11 @@ jobs:
           persist-credentials: false
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
+      - name: Configure Cachix
+        uses: cachix/cachix-action@v17 # zizmor: ignore[unpinned-uses] track Cachix releases
+        with:
+          name: nyxar77-neovim-cache
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Resolve the latest dependency revisions
         run: nix flake update
       - name: Build against the latest revisions
