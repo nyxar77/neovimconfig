@@ -56,6 +56,43 @@ assert_capture(nix_buf, 4, 12, "constant.builtin")
 assert_capture(nix_buf, 4, 21, "function.builtin")
 assert_capture(nix_buf, 6, 3, "function.call")
 
+local notebook_fixture = check_root .. "/notebook.ipynb"
+vim.fn.writefile({
+	vim.json.encode({
+		cells = {
+			{
+				cell_type = "markdown",
+				metadata = vim.empty_dict(),
+				source = { "# Notebook smoke test\n" },
+			},
+		},
+		metadata = {
+			kernelspec = {
+				display_name = "Unavailable test kernel",
+				language = "python",
+				name = "unavailable-test-kernel",
+			},
+		},
+		nbformat = 4,
+		nbformat_minor = 5,
+	}),
+}, notebook_fixture)
+vim.cmd.edit(vim.fn.fnameescape(notebook_fixture))
+local notebook_configured = vim.wait(5000, function()
+	local run_cell = vim.fn.maparg(" jr", "n", false, true)
+	return vim.bo.filetype == "markdown" and run_cell.desc == "notebook: run cell"
+end, 20)
+assert(notebook_configured, "Jupyter notebook integration did not activate")
+assert(vim.fn.exists(":MoltenInit") == 2, "Molten commands are unavailable")
+assert(
+	vim.tbl_contains(vim.fn.MoltenAvailableKernels(), "python3"),
+	"the Python Jupyter kernel is unavailable"
+)
+assert(
+	table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n"):find("# Notebook smoke test", 1, true),
+	"Jupytext did not convert the notebook to Markdown"
+)
+
 if os.getenv("NVIM_CHECK_SERVER_BINARIES") == "1" then
 	for _, server in ipairs(lsp.servers) do
 		local config = vim.lsp.config[server]

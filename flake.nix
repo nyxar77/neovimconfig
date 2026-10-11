@@ -62,7 +62,12 @@
         import nixpkgs {
           inherit system;
           overlays = [ unstableOverlay ];
-          config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [ "intelephense" ];
+          config.allowUnfreePredicate =
+            pkg:
+            builtins.elem (nixpkgs.lib.getName pkg) [
+              "intelephense"
+              "jupytext.nvim"
+            ];
         }
       );
 
