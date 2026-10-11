@@ -11,6 +11,86 @@ require("jupytext").setup({
 	force_ft = "markdown",
 })
 
+local jupytext_group = "jupytext-nvim"
+local jupytext_read = assert(
+	vim.api.nvim_get_autocmds({
+		group = jupytext_group,
+		event = "BufReadCmd",
+	})[1],
+	"jupytext.nvim did not register its notebook reader"
+)
+
+local function write_new_notebook(event)
+	local bufnr = event.buf
+	local notebook_path = vim.fn.fnamemodify(event.match, ":p")
+	local markdown_path = vim.fn.tempname() .. ".md"
+	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+	if vim.fn.writefile(lines, markdown_path) ~= 0 then
+		error("could not write the temporary Jupytext file: " .. markdown_path)
+	end
+
+	local result = vim.system({
+		"jupytext",
+		markdown_path,
+		"--from",
+		"md:markdown",
+		"--to",
+		"ipynb",
+		"--output",
+		notebook_path,
+	}, { text = true }):wait()
+
+	vim.fn.delete(markdown_path)
+	if result.code ~= 0 then
+		local output = result.stderr and result.stderr ~= "" and result.stderr or result.stdout
+		error(output or "jupytext failed without an error message")
+	end
+
+	vim.bo[bufnr].modified = false
+	vim.api.nvim_exec_autocmds("BufWritePost", { buffer = bufnr, modeline = false })
+end
+
+local function initialise_new_notebook(event)
+	local bufnr = event.buf
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {
+		"---",
+		"jupyter:",
+		"  kernelspec:",
+		"    display_name: Python 3",
+		"    language: python",
+		"    name: python3",
+		"---",
+		"",
+		"```python",
+		"",
+		"```",
+	})
+	vim.bo[bufnr].modified = false
+
+	vim.api.nvim_create_autocmd({ "BufWriteCmd", "FileWriteCmd" }, {
+		buffer = bufnr,
+		group = jupytext_group,
+		callback = write_new_notebook,
+	})
+
+	vim.bo[bufnr].filetype = "markdown"
+end
+
+vim.api.nvim_del_autocmd(jupytext_read.id)
+vim.api.nvim_create_autocmd("BufReadCmd", {
+	pattern = "*.ipynb",
+	group = jupytext_group,
+	callback = function(event)
+		if vim.fn.filereadable(event.match) == 0 or vim.fn.getfsize(event.match) == 0 then
+			initialise_new_notebook(event)
+			return
+		end
+
+		jupytext_read.callback(event)
+	end,
+})
+
 require("lz.n").load({
 	{
 		"quarto-nvim",

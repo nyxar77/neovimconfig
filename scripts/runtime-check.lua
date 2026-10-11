@@ -84,14 +84,21 @@ local notebook_configured = vim.wait(5000, function()
 end, 20)
 assert(notebook_configured, "Jupyter notebook integration did not activate")
 assert(vim.fn.exists(":MoltenInit") == 2, "Molten commands are unavailable")
-assert(
-	vim.tbl_contains(vim.fn.MoltenAvailableKernels(), "python3"),
-	"the Python Jupyter kernel is unavailable"
-)
+assert(vim.tbl_contains(vim.fn.MoltenAvailableKernels(), "python3"), "the Python Jupyter kernel is unavailable")
 assert(
 	table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n"):find("# Notebook smoke test", 1, true),
 	"Jupytext did not convert the notebook to Markdown"
 )
+
+local new_notebook_fixture = check_root .. "/new-notebook.ipynb"
+vim.cmd.edit(vim.fn.fnameescape(new_notebook_fixture))
+assert(vim.fn.filereadable(new_notebook_fixture) == 0, "opening a new notebook created it before saving")
+assert(vim.bo.filetype == "markdown", "a new notebook is not editable as Markdown")
+vim.cmd.write()
+assert(vim.fn.filereadable(new_notebook_fixture) == 1, "saving a new notebook did not create an ipynb file")
+local new_notebook = vim.json.decode(table.concat(vim.fn.readfile(new_notebook_fixture), "\n"))
+assert(new_notebook.nbformat == 4, "the new notebook is not valid nbformat 4 JSON")
+assert(new_notebook.metadata.kernelspec.name == "python3", "the new notebook does not declare the Python kernel")
 
 if os.getenv("NVIM_CHECK_SERVER_BINARIES") == "1" then
 	for _, server in ipairs(lsp.servers) do
