@@ -7,7 +7,12 @@ nvim_bin="${NVIM_BIN:-nvim}"
 plugin_pack="${NVIM_PLUGIN_PACK:-${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/pack/hm}"
 
 cleanup() {
-  rm -rf -- "$check_root"
+  local status=$?
+  if ((status == 0)); then
+    rm -rf -- "$check_root"
+  else
+    printf 'Check failed; logs and fixtures retained in %s\n' "$check_root" >&2
+  fi
 }
 trap cleanup EXIT
 
@@ -27,6 +32,10 @@ export XDG_CACHE_HOME="$check_root/cache"
 export XDG_CONFIG_HOME="$check_root/config"
 export XDG_DATA_HOME="$check_root/data"
 export XDG_STATE_HOME="$check_root/state"
+export DOTNET_CLI_HOME="$check_root/dotnet-home"
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+export NUGET_PACKAGES="$check_root/nuget"
 
 "$nvim_bin" --headless -u NONE -i NONE \
   "+lua local root = assert(os.getenv('NEOVIM_CONFIG_ROOT')); for _, path in ipairs(vim.fn.glob(root .. '/nvim/**/*.lua', false, true)) do local chunk, err = loadfile(path); if not chunk then error(path .. ': ' .. err) end end" \
@@ -44,5 +53,11 @@ export XDG_STATE_HOME="$check_root/state"
 	"+qa!"
 
 git -C "$config_root" diff --check
+
+"$nvim_bin" --headless -i NONE \
+  "+lua vim.g.neovim_dotnet_check_passed = false" \
+  "+luafile $config_root/scripts/dotnet-check.lua" \
+  "+lua if not vim.g.neovim_dotnet_check_passed then vim.cmd.cquit() end" \
+  "+qa!"
 
 printf 'Neovim configuration checks passed.\n'

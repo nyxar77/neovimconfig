@@ -24,6 +24,9 @@ in
     extraWrapperArgs = [
       "--unset"
       "NVIM_RPLUGIN_MANIFEST"
+      "--set"
+      "EASY_DOTNET_ROSLYN_DLL_PATH"
+      "${pkgs.roslyn-ls}/lib/roslyn-ls/Microsoft.CodeAnalysis.LanguageServer.dll"
     ];
 
     plugins = with pkgs.vimPlugins; [
@@ -45,6 +48,8 @@ in
       (optionalPlugin markview-nvim)
 
       jupynvim
+
+      (optionalPlugin easy-dotnet-nvim)
 
       (optionalPlugin telescope-nvim)
       (optionalPlugin telescope-live-grep-args-nvim)
@@ -69,6 +74,7 @@ in
           bash
           blade
           c
+          c_sharp
           cpp
           css
           desktop
@@ -199,6 +205,13 @@ in
       # C / CMake
       # clang-tools # ~800 MiB; enable together with clangd in core/lsp.lua.
       neocmakelsp
+
+      # C# / .NET
+      dotnet-sdk_10
+      easy-dotnet-server
+      roslyn-ls
+      csharpier
+      netcoredbg
 
       # Debug adapters (enable when needed)
       # delve

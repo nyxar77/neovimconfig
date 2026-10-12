@@ -22,6 +22,7 @@ require("lz.n").load({
 				},
 				formatters_by_ft = {
 					lua = { "stylua" },
+					cs = { "csharpier" },
 					python = { "isort", "black" },
 					rust = { "rustfmt" },
 					javascript = { "biome" },

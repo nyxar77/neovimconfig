@@ -7,6 +7,7 @@ local filetypes = {
 	"blade",
 	"c",
 	"cpp",
+	"cs",
 	"css",
 	"desktop",
 	"diff",
