@@ -113,10 +113,16 @@ local function request(method, params)
 end
 local definition
 wait_for("cross-project definition", function()
-	definition = request("textDocument/definition", position(6, 34))
+	local response, err = client:request_sync("textDocument/definition", position(6, 34), 15000, app_buf)
+	if not response then
+		assert(err == "timeout", "textDocument/definition: " .. vim.inspect(err))
+		return false
+	end
+	assert(not response.err, "textDocument/definition: " .. vim.inspect(response.err))
+	definition = response.result
 	local first = definition and definition[1]
 	return first and (first.uri or first.targetUri):match("/Library/Calculator.cs$")
-end)
+end, 120000)
 local hover = request("textDocument/hover", position(6, 34))
 assert(hover and vim.inspect(hover):find("Add", 1, true), "hover did not describe Add")
 local refs = position(6, 34)
