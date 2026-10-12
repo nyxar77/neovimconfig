@@ -12,6 +12,11 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    easy-dotnet = {
+      url = "github:GustavEikaas/easy-dotnet.nvim";
+      flake = false;
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,6 +35,7 @@
       home-manager,
       nixpkgs,
       unstable,
+      easy-dotnet,
       ...
     }:
     let
@@ -51,8 +57,20 @@
         in
         {
           inherit (unstablePkgs) codex;
+          inherit (unstablePkgs)
+            csharpier
+            roslyn-ls
+            dotnet-sdk_10
+            ;
+          easy-dotnet-server = unstablePkgs.callPackage ./packages/easy-dotnet-server.nix { };
+          netcoredbg = unstablePkgs.callPackage ./packages/netcoredbg.nix { };
           vimPlugins = prev.vimPlugins // {
+            easy-dotnet-nvim = unstablePkgs.vimPlugins.easy-dotnet-nvim.overrideAttrs {
+              src = easy-dotnet;
+              version = "unstable-${easy-dotnet.shortRev}";
+            };
             harpoon-lualine = unstablePkgs.vimPlugins.harpoon-lualine;
+            jupynvim = unstablePkgs.vimPlugins.jupynvim;
             reactive-nvim = unstablePkgs.vimPlugins.reactive-nvim;
           };
         };
@@ -66,7 +84,6 @@
             pkg:
             builtins.elem (nixpkgs.lib.getName pkg) [
               "intelephense"
-              "jupytext.nvim"
             ];
         }
       );

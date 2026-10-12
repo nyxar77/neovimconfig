@@ -127,6 +127,26 @@ Use these from visual or operator-pending mode.
 | `<leader>du` | Toggle the debug UI |
 | `<leader>de` | Evaluate the expression under the cursor/selection |
 
+## C# / .NET
+
+Open Neovim from the solution directory. C# files load Roslyn, CSharpier and
+the .NET debugger automatically. The code navigation and debugging keys above
+also work in C#. Formatting uses the existing `<leader>ff` and save hook.
+
+| Command | Action |
+|---|---|
+| `:Dotnet` | Pick a .NET action |
+| `:Dotnet build solution` | Build the solution |
+| `:Dotnet run` | Select and run a project |
+| `:Dotnet test solution` | Run solution tests |
+| `:Dotnet testrunner` | Open the test tree |
+| `:Dotnet add package` | Select a NuGet package |
+| `:Dotnet debug` | Select and debug a project |
+
+The default SDK is .NET 10. Projects targeting other SDKs should provide them
+through their development shell; `global.json` controls SDK selection.
+Tools are managed by Nix; update them through this flake.
+
 ## Useful commands
 
 | Command | Action |

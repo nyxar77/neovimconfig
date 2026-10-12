@@ -8,39 +8,7 @@ let
     optional = true;
   };
 
-  notebookPythonPackages =
-    pythonPackages: with pythonPackages; [
-      ipykernel
-      jupyter-client
-      nbformat
-      pillow
-    ];
-
-  moltenPlugin = pkgs.vimPlugins.molten-nvim.overrideAttrs {
-    checkInputs = [ ];
-    nvimSkipModules = [
-      "load_image_nvim"
-      "load_snacks_nvim"
-      "load_wezterm_nvim"
-    ];
-  };
-
-  moltenManifestPython = pkgs.python3.withPackages (
-    pythonPackages: [ pythonPackages.pynvim ] ++ notebookPythonPackages pythonPackages
-  );
-
-  moltenManifest = pkgs.runCommand "molten-rplugin.vim" { } ''
-    export HOME="$TMPDIR/home"
-    export NVIM_RPLUGIN_MANIFEST="$out"
-    mkdir -p "$HOME/.local/state/nvim"
-
-    ${pkgs.neovim-unwrapped}/bin/nvim --headless -u NORC -i NONE \
-      --cmd "set runtimepath^=${moltenPlugin}" \
-      --cmd "lua vim.g.python3_host_prog='${moltenManifestPython}/bin/python3'" \
-      +UpdateRemotePlugins +qa!
-
-    grep -q MoltenInit "$out"
-  '';
+  notebookPython = pkgs.python3.withPackages (pythonPackages: [ pythonPackages.ipykernel ]);
 in
 {
   programs.neovim = {
@@ -54,9 +22,11 @@ in
     withRuby = false;
     sideloadInitLua = true;
     extraWrapperArgs = [
-      "--set"
+      "--unset"
       "NVIM_RPLUGIN_MANIFEST"
-      "${moltenManifest}"
+      "--set"
+      "EASY_DOTNET_ROSLYN_DLL_PATH"
+      "${pkgs.roslyn-ls}/lib/roslyn-ls/Microsoft.CodeAnalysis.LanguageServer.dll"
     ];
 
     plugins = with pkgs.vimPlugins; [
@@ -77,11 +47,9 @@ in
       (optionalPlugin nvim-lint)
       (optionalPlugin markview-nvim)
 
-      jupytext-nvim
-      moltenPlugin
-      (optionalPlugin image-nvim)
-      (optionalPlugin otter-nvim)
-      (optionalPlugin quarto-nvim)
+      jupynvim
+
+      (optionalPlugin easy-dotnet-nvim)
 
       (optionalPlugin telescope-nvim)
       (optionalPlugin telescope-live-grep-args-nvim)
@@ -106,6 +74,7 @@ in
           bash
           blade
           c
+          c_sharp
           cpp
           css
           desktop
@@ -182,8 +151,6 @@ in
       (optionalPlugin nvim-ufo)
     ];
 
-    extraPython3Packages = notebookPythonPackages;
-
     extraPackages = with pkgs; [
       # Core Neovim tools
       git
@@ -226,8 +193,10 @@ in
       basedpyright
       black
       isort
+
+      # Notebook
+      notebookPython
       imagemagick
-      python3Packages.jupytext
 
       # Go
       go
@@ -236,6 +205,13 @@ in
       # C / CMake
       # clang-tools # ~800 MiB; enable together with clangd in core/lsp.lua.
       neocmakelsp
+
+      # C# / .NET
+      dotnet-sdk_10
+      easy-dotnet-server
+      roslyn-ls
+      csharpier
+      netcoredbg
 
       # Debug adapters (enable when needed)
       # delve

@@ -117,7 +117,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end, "Hover Documentation")
 		map("gd", telescope("lsp_definitions"), "Goto Definition")
 		map("grd", vim.lsp.buf.declaration, "Goto Declaration")
-		map("gra", vim.lsp.buf.code_action, "Code Action")
+		map("gra", function()
+			-- jupynvim's cell command mode intentionally locks the buffer. Enter
+			-- cell edit mode before requesting an action so workspace edits can
+			-- actually be applied.
+			local ok, cellmode = pcall(require, "jupynvim.notebook.cellmode")
+			if ok and cellmode.is_command(event.buf) then
+				cellmode.enter_edit(event.buf)
+			end
+			vim.lsp.buf.code_action()
+		end, "Code Action")
 		map("grn", vim.lsp.buf.rename, "Rename all references")
 		map("grr", telescope("lsp_references"), "Lsp references")
 		map("gri", vim.lsp.buf.implementation, "Lsp implementation")
@@ -126,7 +135,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		map("<leader>v", "<cmd>vsplit | lua vim.lsp.buf.definition()<cr>", "Goto Definition in Vertical Split")
 
 		local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
-
 	end,
 })
 

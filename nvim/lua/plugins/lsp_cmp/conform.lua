@@ -15,6 +15,11 @@ require("lz.n").load({
 		after = function()
 			require("conform").setup({
 				formatters = {
+					csharpier = {
+						command = "csharpier",
+						args = { "format", "--stdin-path", "$FILENAME" },
+						stdin = true,
+					},
 					biome = {
 						cmd = "biome",
 						append_args = { "format", "--write" },
@@ -22,6 +27,7 @@ require("lz.n").load({
 				},
 				formatters_by_ft = {
 					lua = { "stylua" },
+					cs = { "csharpier" },
 					python = { "isort", "black" },
 					rust = { "rustfmt" },
 					javascript = { "biome" },
