@@ -253,14 +253,29 @@ local function plugin_command(cmd, expected_exit, expected_output)
 	end
 	vim.cmd(cmd)
 	local finished
-	wait_for(cmd, function()
+	local timeout = cmd == "Dotnet build solution" and 300000 or 120000
+	local completed = vim.wait(timeout, function()
 		for _, tab in ipairs(manager.get_all()) do
 			if not old_buffers[tab.buf] and tab.last_status == "finished" then
 				finished = tab
 				return true
 			end
 		end
-	end, 120000)
+	end, 50)
+	if not completed then
+		local details = {}
+		for _, tab in ipairs(manager.get_all()) do
+			if not old_buffers[tab.buf] then
+				local output = "<buffer unavailable>"
+				if vim.api.nvim_buf_is_valid(tab.buf) then
+					local count = vim.api.nvim_buf_line_count(tab.buf)
+					output = table.concat(vim.api.nvim_buf_get_lines(tab.buf, math.max(0, count - 30), count, false), "\n")
+				end
+				table.insert(details, "status=" .. tostring(tab.last_status) .. " exit=" .. tostring(tab.last_exit_code) .. "\n" .. output)
+			end
+		end
+		error(cmd .. " timed out after " .. timeout / 1000 .. "s\n" .. table.concat(details, "\n"))
+	end
 	local output = table.concat(vim.api.nvim_buf_get_lines(finished.buf, 0, -1, false), "\n")
 	assert(
 		finished.last_exit_code == expected_exit,
