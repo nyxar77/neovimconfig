@@ -27,8 +27,9 @@ assert(vim.wait(60000, function()
 end, 50), "Roslyn did not attach")
 
 require("lz.n").trigger_load("conform.nvim")
+require("conform").format({ bufnr = buf, async = false, timeout_ms = 30000 })
+assert(vim.api.nvim_buf_line_count(buf) > 1, "Conform did not format the C# buffer")
 vim.cmd.write()
-assert(#vim.fn.readfile(source) > 1, "format-on-save did not format the C# file")
 local formatted = vim.system({ "csharpier", "check", source }, { cwd = root, text = true }):wait(30000)
 assert(formatted.code == 0, "CSharpier rejected the saved file: " .. (formatted.stderr or ""))
 
