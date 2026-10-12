@@ -53,6 +53,7 @@
           inherit (unstablePkgs) codex;
           vimPlugins = prev.vimPlugins // {
             harpoon-lualine = unstablePkgs.vimPlugins.harpoon-lualine;
+            jupynvim = unstablePkgs.vimPlugins.jupynvim;
             reactive-nvim = unstablePkgs.vimPlugins.reactive-nvim;
           };
         };
@@ -66,7 +67,6 @@
             pkg:
             builtins.elem (nixpkgs.lib.getName pkg) [
               "intelephense"
-              "jupytext.nvim"
             ];
         }
       );
