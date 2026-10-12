@@ -15,6 +15,11 @@ require("lz.n").load({
 		after = function()
 			require("conform").setup({
 				formatters = {
+					csharpier = {
+						command = "csharpier",
+						args = { "format", "--stdin-path", "$FILENAME" },
+						stdin = true,
+					},
 					biome = {
 						cmd = "biome",
 						append_args = { "format", "--write" },

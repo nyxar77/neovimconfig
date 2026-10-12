@@ -280,9 +280,11 @@ local reopened_buf = vim.api.nvim_get_current_buf()
 assert(
 	vim.wait(5000, function()
 		local reopened = Notebook.get(reopened_buf)
-		return reopened and notebook_has_output(reopened, "notebook-e2e: 55")
+		return reopened
+			and vim.bo[reopened_buf].buftype == "acwrite"
+			and notebook_has_output(reopened, "notebook-e2e: 55")
 	end, 20),
-	"the notebook output did not survive reopening"
+	"the notebook did not become ready with its saved output after reopening"
 )
 
 local session_fixture = check_root .. "/notebook-session.vim"

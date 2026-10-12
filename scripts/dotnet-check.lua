@@ -208,7 +208,7 @@ vim.api.nvim_buf_set_lines(app_buf, 0, -1, false, program)
 vim.api.nvim_buf_set_lines(app_buf, 0, -1, false, { table.concat(program, " ") })
 local format_map = vim.fn.maparg(" ff", "n", false, true)
 assert(type(format_map.callback) == "function", "format mapping is missing")
-format_map.callback()
+vim.api.nvim_feedkeys(" ff", "mx", false)
 wait_for("manual CSharpier formatting", function()
 	return vim.api.nvim_buf_line_count(app_buf) > 5
 end)
@@ -233,9 +233,20 @@ picker_timer:start(
 	end)
 )
 local manager = require("easy-dotnet.terminal.manager")
+local function focus_app()
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		if vim.api.nvim_win_get_buf(win) == app_buf then
+			vim.api.nvim_set_current_win(win)
+			return
+		end
+	end
+	vim.cmd.new()
+	vim.api.nvim_set_current_buf(app_buf)
+end
+
 local function plugin_command(cmd, expected_exit, expected_output)
 	vim.cmd("stopinsert")
-	vim.api.nvim_set_current_buf(app_buf)
+	focus_app()
 	local old_buffers = {}
 	for _, tab in ipairs(manager.get_all()) do
 		old_buffers[tab.buf] = true
@@ -263,22 +274,22 @@ local function plugin_command(cmd, expected_exit, expected_output)
 end
 plugin_command("Dotnet build solution", 0, "Build succeeded")
 plugin_command("Dotnet run", 0, "dotnet-e2e: 42")
-plugin_command("Dotnet test solution", 0, "Passed:     1")
+plugin_command("Dotnet test solution", 0, "succeeded: 1")
 write(
 	"Tests/CalculatorTests.cs",
 	vim.tbl_map(function(line)
 		return line:gsub("Assert.Equal%(42,", "Assert.Equal(43,")
 	end, test_source)
 )
-plugin_command("Dotnet test solution", 1, "Failed:     1")
+plugin_command("Dotnet test solution", 1, "failed: 1")
 write("Tests/CalculatorTests.cs", test_source)
 write("Library/Broken.cs", { "this is deliberately invalid C#;" })
-plugin_command("Dotnet build solution", 1, "Build FAILED")
+plugin_command("Dotnet build solution", 1, "Build failed")
 vim.fn.delete(root .. "/Library/Broken.cs")
 plugin_command("Dotnet build solution", 0, "Build succeeded")
 
 vim.cmd("stopinsert")
-vim.api.nvim_set_current_buf(app_buf)
+focus_app()
 vim.cmd("Dotnet testrunner")
 local runner = require("easy-dotnet.test-runner.state")
 local render = require("easy-dotnet.test-runner.render")
@@ -307,12 +318,17 @@ print("PASS: test tree discovery and execution")
 
 -- Start via the existing DAP mapping and stop on a real source breakpoint.
 vim.cmd("stopinsert")
-vim.api.nvim_set_current_buf(app_buf)
+focus_app()
 local line = vim.fn.search("Console.WriteLine", "nw")
 assert(line > 0, "debug breakpoint line missing")
 vim.api.nvim_win_set_cursor(0, { line, 0 })
-vim.fn.maparg(" db", "n", false, true).callback()
+assert(type(vim.fn.maparg(" db", "n", false, true).callback) == "function", "breakpoint mapping is missing")
+vim.api.nvim_feedkeys(" db", "mx", false)
 local dap = require("dap")
+wait_for("debugger breakpoint mapping", function()
+	local breakpoints = require("dap.breakpoints").get(app_buf)[app_buf]
+	return breakpoints and breakpoints[1] and breakpoints[1].line == line
+end, 5000)
 local stopped, output, exited = nil, {}, false
 dap.listeners.after.event_stopped.dotnet_check = function(_, body)
 	stopped = body
@@ -324,7 +340,8 @@ dap.listeners.after.event_exited.dotnet_check = function(_, body)
 	assert(body.exitCode == 0, "debuggee exited unsuccessfully")
 	exited = true
 end
-vim.fn.maparg(" dc", "n", false, true).callback()
+assert(type(vim.fn.maparg(" dc", "n", false, true).callback) == "function", "debugger continue mapping is missing")
+vim.api.nvim_feedkeys(" dc", "mx", false)
 wait_for("debugger breakpoint", function()
 	return stopped ~= nil and dap.session() and dap.session().current_frame ~= nil
 end, 120000)
