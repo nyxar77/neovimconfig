@@ -1,0 +1,13 @@
+diff --git a/lua/jupynvim/backend/connect.lua b/lua/jupynvim/backend/connect.lua
+--- a/lua/jupynvim/backend/connect.lua
++++ b/lua/jupynvim/backend/connect.lua
+@@ -223,6 +223,9 @@ local function spawn_client(cmd_vec, alias)
+       end)
+     end,
+   })
++  -- Publish before Image.attach yields to scheduled notebook opens.
++  M.clients[alias] = client
++  if alias == "local" then M.client = client end
+   -- Attach the controlling TTY for native Kitty graphics. Local mode is
+   -- attempted first; for SSH-remote backends the local-mode attempt fails
+   -- (backend is on a different host) and Image.attach auto-falls-back to

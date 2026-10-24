@@ -70,7 +70,9 @@
               version = "unstable-${easy-dotnet.shortRev}";
             };
             harpoon-lualine = unstablePkgs.vimPlugins.harpoon-lualine;
-            jupynvim = unstablePkgs.vimPlugins.jupynvim;
+            jupynvim = unstablePkgs.vimPlugins.jupynvim.overrideAttrs (old: {
+              patches = (old.patches or [ ]) ++ [ ./packages/jupynvim-backend-startup.patch ];
+            });
             reactive-nvim = unstablePkgs.vimPlugins.reactive-nvim;
           };
         };

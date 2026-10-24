@@ -24,4 +24,6 @@ require("jupynvim").setup({
 		run_advance_alt = false,
 		run_stay = "<leader>nr",
 	},
+	explorer_keys = {},
+	explorer_cwd_keys = {},
 })
