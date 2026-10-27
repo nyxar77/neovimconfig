@@ -52,11 +52,12 @@
               builtins.elem (prev.lib.getName pkg) [
                 "codex"
                 "harpoon-lualine"
+                "gemini-cli-bin"
               ];
           };
         in
         {
-          inherit (unstablePkgs) codex;
+          inherit (unstablePkgs) codex gemini-cli-bin;
           inherit (unstablePkgs)
             csharpier
             roslyn-ls

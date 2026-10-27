@@ -251,6 +251,7 @@ in
 
       # agents
       codex
+      gemini-cli-bin
     ];
   };
 
