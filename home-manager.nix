@@ -250,8 +250,8 @@ in
       hyprls
 
       # agents
+      antigravity-cli
       codex
-      gemini-cli-bin
     ];
   };
 

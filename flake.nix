@@ -50,14 +50,14 @@
             config."allowUnfreePredicate" =
               pkg:
               builtins.elem (prev.lib.getName pkg) [
+                "antigravity-cli"
                 "codex"
                 "harpoon-lualine"
-                "gemini-cli-bin"
               ];
           };
         in
         {
-          inherit (unstablePkgs) codex gemini-cli-bin;
+          inherit (unstablePkgs) antigravity-cli codex;
           inherit (unstablePkgs)
             csharpier
             roslyn-ls
